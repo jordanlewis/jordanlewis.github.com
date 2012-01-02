@@ -2,7 +2,22 @@
 // To give it a try, uncomment some of the lines below rebuild your blog, and see how it works.
 // If you need a handy color picker try http://hslpicker.com
 
-//$header-bg: #263347;
+$main-bg: #fff;
+$page-bg: #fff;
+$header-bg: #fff; // this is the center top bar
+$nav-bg: #fff;
+$nav-bg-front: #fff;
+$nav-bg-back: #fff;
+$title-color: #999;
+$text-color: #000;
+
+$link-color: #084B8A;
+$link-color-hover: $link-color;
+$link-decoration: none;
+$link-decoration-hover: underline;
+$link-background-color-hover: #eee;
+$link-color-visited: adjust-color($link-color, $hue: 80, $lightness: -10) !default;
+$link-color-active: $link-color-hover;
 //$subtitle-color: lighten($header-bg, 58);
 //$nav-bg: desaturate(lighten(#8fc17a, 18), 5);
 //$nav-bg-front: image-url('noise.png');

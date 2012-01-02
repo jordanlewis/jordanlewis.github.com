@@ -4,6 +4,9 @@ $img-border: inline-image('dotted-border.png');
 // Main Link Colors
 $link-color: lighten(#165b94, 3) !default;
 $link-color-hover: adjust-color($link-color, $lightness: 10, $saturation: 25) !default;
+$link-decoration: underline !default;
+$link-decoration-hover: none !default;
+$link-background-color-hover: none !default;
 $link-color-visited: adjust-color($link-color, $hue: 80, $lightness: -4) !default;
 $link-color-active: adjust-color($link-color-hover, $lightness: -15) !default;
 
@@ -63,6 +66,8 @@ $page-border-bottom: darken($footer-bg, 5) !default;
 
 a {
   @include link-colors($link-color, $hover: $link-color-hover, $focus: $link-color-hover, $visited: $link-color-visited, $active: $link-color-active);
+  text-decoration: $link-decoration;
+  &:hover { text-decoration: $link-decoration-hover; background-color: $link-background-color-hover}
 }
 aside.sidebar a {
   @include link-colors($sidebar-link-color, $hover: $sidebar-link-color-hover, $focus: $sidebar-link-color-hover, $active: $sidebar-link-color-active);
