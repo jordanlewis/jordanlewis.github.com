@@ -3,11 +3,11 @@
 # ----------------------- #
 
 url: http://jordanlewis.org
-title: Jordan A. Lewis
+title: Jordan Lewis
 subtitle:
-author: Jordan A. Lewis
+author: Jordan Lewis
 simple_search: http://google.com/search
-description:
+description: Personal website and blog of Jordan Lewis
 
 # Default date format is "ordinal" (resulting in "July 22nd 2007")
 # You can customize the format as defined in
@@ -33,6 +33,7 @@ destination: public
 plugins: plugins
 code_dir: downloads/code
 category_dir: blog/categories
+category_title_prefix: "Category: "
 markdown: rdiscount
 pygments: false # default python pygments have been replaced by pygments.rb
 
@@ -45,7 +46,7 @@ titlecase: true       # Converts page and post titles to tilecase
 
 # list each of the sidebar modules you want to include, in the order you want them to appear.
 # To add custom asides, create files in /source/_includes/custom/asides/ and add them to the list like 'custom/asides/custom_aside_name.html'
-default_asides: [asides/recent_posts.html, asides/github.html, asides/twitter.html, asides/pinboard.html, asides/googleplus.html]
+default_asides: [custom/asides/about.html, asides/recent_posts.html, asides/twitter.html, asides/pinboard.html, asides/googleplus.html, asides/github.html]
 
 # Each layout uses the default asides, but they can have their own asides instead. Simply uncomment the lines below
 # and add an array with the asides you want to use.
@@ -69,7 +70,7 @@ twitter_tweet_count: 4
 twitter_show_replies: false
 twitter_follow_button: true
 twitter_show_follower_count: false
-twitter_tweet_button: true
+twitter_tweet_button: false
 
 # Google +1
 google_plus_one: false
@@ -89,11 +90,11 @@ delicious_user:
 delicious_count: 3
 
 # Disqus Comments
-disqus_short_name:
+disqus_short_name: jordanlewis
 disqus_show_comment_count: false
 
 # Google Analytics
-google_analytics_tracking_id:
+google_analytics_tracking_id: UA-21083142-1
 
 # Facebook Like
 facebook_like: false
