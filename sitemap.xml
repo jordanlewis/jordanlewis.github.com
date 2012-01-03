@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
+    <url>
+        <loc>http://jordanlewis.org/blog/2012/01/02/hello-world/</loc>
+        <lastmod>2012-01-03T02:01:10-05:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://jordanlewis.org/blog/2012/01/03/notes-on-purely-functional-data-structures/
+        </loc>
+        <lastmod>2012-01-03T02:01:34-05:00</lastmod>
+    </url>
+    <url>
+        <loc>http://jordanlewis.org/about/</loc>
+        <lastmod>2012-01-02T22:48:23-05:00</lastmod>
+    </url>
+    <url>
+        <loc>http://jordanlewis.org/blog/archives/</loc>
+        <lastmod>2012-01-03T02:01:34-05:00</lastmod>
+    </url>
+    <url>
+        <loc>http://jordanlewis.org/</loc>
+        <lastmod>2012-01-03T02:01:34-05:00</lastmod>
+    </url>
+</urlset>

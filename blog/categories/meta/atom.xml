@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: meta | Jordan Lewis]]></title>
+  <link href="http://jordanlewis.org/blog/categories/meta/atom.xml" rel="self"/>
+  <link href="http://jordanlewis.org/"/>
+  <updated>2012-01-03T02:27:09-05:00</updated>
+  <id>http://jordanlewis.org/</id>
+  <author>
+    <name><![CDATA[Jordan Lewis]]></name>
+    <email><![CDATA[jordanthelewis@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Hello World]]></title>
+    <link href="http://jordanlewis.org/blog/2012/01/02/hello-world/"/>
+    <updated>2012-01-02T01:50:00-05:00</updated>
+    <id>http://jordanlewis.org/blog/2012/01/02/hello-world</id>
+    <content type="html"><![CDATA[<p>Hi internet! I've gotten with the program and bloggified my website with the help of the pretty rad <a href="http://octopress.org">Octopress</a> framework. Hope you enjoy it.</p>
+]]></content>
+  </entry>
+  
+</feed>
