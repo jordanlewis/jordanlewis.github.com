@@ -60,16 +60,19 @@ body > nav {
       text-decoration: none;
       font-size: 1.1em;
       padding: .1em 0;
+      padding-right: .4em;
       line-height: 1.5em;
+      //&:hover { text-decoration: none; background-color: #fff}
     }
     li + li {
       border-left: 1px solid $nav-border-left;
-      margin-left: .8em;
       a {
-        padding-left: .8em;
+        padding-left: .4em;
+        padding-right: .4em;
         border-left: 1px solid $nav-border-right;
       }
     }
+
     form {
       float: right;
       text-align: left;
