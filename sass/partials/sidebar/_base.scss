@@ -40,7 +40,7 @@ aside.sidebar {
     }
   }
   a {
-    color: inherit;
+    color: $sidebar-link-color-desaturated;
     @include transition(color .5s);
   }
   &:hover a {
