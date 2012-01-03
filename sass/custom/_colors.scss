@@ -5,29 +5,56 @@
 $main-bg: #fff;
 $page-bg: #fff;
 $header-bg: #fff; // this is the center top bar
-$nav-bg: #fff;
+$nav-bg: #fff; // this is the home/about me /archives bar
 $nav-bg-front: #fff;
 $nav-bg-back: #fff;
-$title-color: #999;
+$title-color: #666;
+$subtitle-color: #f0f;
 $text-color: #000;
+
+$noise-bg: none;
+
 
 $link-color: #084B8A;
 $link-color-hover: $link-color;
 $link-decoration: none;
-$link-decoration-hover: underline;
+$link-decoration-hover: none;
 $link-background-color-hover: #eee;
-$link-color-visited: adjust-color($link-color, $hue: 80, $lightness: -10) !default;
+$link-color-visited: adjust-color($link-color, $hue: 80, $lightness: -6) !default;
 $link-color-active: $link-color-hover;
+
+$nav-color: $link-color;
+$nav-color-hover: $link-color-hover;
+//$nav-placeholder: desaturate(darken($nav-bg, 10), 15);
+//$nav-border: darken($nav-bg, 10);
+$nav-border-bottom: darken($nav-bg, 25);
+$nav-border-top: $nav-border-bottom;
+$nav-border-left: $nav-border-bottom;
+$nav-border-right: #fff;
+
 //$subtitle-color: lighten($header-bg, 58);
 //$nav-bg: desaturate(lighten(#8fc17a, 18), 5);
 //$nav-bg-front: image-url('noise.png');
 //$nav-bg-back: linear-gradient(lighten($nav-bg, 8), $nav-bg, darken($nav-bg, 11));
-//$sidebar-bg: desaturate(#eceff5, 8);
-//$sidebar-link-color: saturate(#526f9a, 10);
-//$sidebar-link-color-hover: darken(#7ab662, 9);
-//$footer-bg: #ccc !default;
-//$footer-bg-front: image-url('noise.png');
-//$footer-bg-back: linear-gradient(lighten($footer-bg, 8), $footer-bg, darken($footer-bg, 11));
+
+
+///* Sidebar colors */
+$sidebar-bg: #fff;
+$sidebar-color: $text-color;
+$sidebar-link-color-desaturated: none;
+//$sidebar-link-color: $link-color !default;
+//$sidebar-link-color-hover: $link-color-hover !default;
+//$sidebar-link-color-active: $link-color-active !default;
+//$sidebar-color: change-color(mix($text-color, $sidebar-bg, 80), $hue: hue($sidebar-bg), $saturation: saturation($sidebar-bg)/2) !default;
+//$sidebar-border: desaturate(darken($sidebar-bg, 7), 10) !default;
+//$sidebar-border-hover: darken($sidebar-bg, 7) !default;
+//$sidebar-link-color-subdued: lighten($sidebar-color, 20) !default;
+//$sidebar-link-color-subdued-hover: $sidebar-link-color-hover !default;
+//$twitter-status-link: lighten($sidebar-link-color-subdued, 15) !default;
+
+$footer-bg: #fff;
+$footer-bg-front: none;
+$footer-bg-back: none;
 
 
 /* To use the light Solarized highlighting theme uncomment the following line */
