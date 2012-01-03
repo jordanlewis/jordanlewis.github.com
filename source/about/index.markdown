@@ -1,10 +1,10 @@
 ---
 layout: page
-title: "About"
+title: "About Me"
 date: 2012-01-02 02:04
 comments: true
 sharing: true
-footer: true
+footer: false
 ---
 - I am a software engineer at <a href="http://knewton.com">Knewton</a> living in Brooklyn, New York.
 - I recently graduated from <a href="http://www.uchicago.edu">The University of Chicago</a> with a B.S. in Computer Science.
