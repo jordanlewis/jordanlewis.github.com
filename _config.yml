@@ -98,3 +98,6 @@ google_analytics_tracking_id: UA-21083142-1
 
 # Facebook Like
 facebook_like: false
+
+# Last.fm
+lastfm_user: Crassworm
