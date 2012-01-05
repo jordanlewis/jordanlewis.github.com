@@ -14,4 +14,4 @@ footer: false
 - I enjoy the occasional programming challenge at <a href="http://projecteuler.net/index.php?section=profile&amp;profile=toft">Project Euler</a>.
 - I like making music and sounds, and uploading them to <a href="http://soundcloud.com/jordanlewis">SoundCloud</a>.
 - Sometimes I take <a href="http://flickr.com/photos/crassworm">photos</a>.
-- Look at <a href="images/brain.jpg">three cross sections of my brain!</a>
+- Look at <a href="/images/brain.jpg">three cross sections of my brain!</a>
