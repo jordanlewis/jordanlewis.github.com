@@ -9,7 +9,8 @@
   <meta name="author" content="Jordan Lewis">
 
   
-  <meta name="description" content="I heard a lot of good things about Mike Okasaki&#8217;s Purely Functional Data Structures at UChicago, but didn&#8217;t ever take the time to check &hellip;">
+  <meta name="description" content="This is the inaugural post of the PFDS series. Section 2.1 discusses the ramifications of implementing lists and stacks in a
+functional and immutable &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,6 +83,101 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/01/27/chapter-1-dot-1/">Section 2.1</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-27T22:09:00-05:00" pubdate data-updated="true">Jan 27<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>This is the inaugural post of the PFDS series.</p>
+
+<p>Section 2.1 discusses the ramifications of implementing lists and stacks in a
+functional and immutable manner. Using the operation of <em>list catenation</em>
+as a motivator, Okasaki introduces the idea of data sharing. We see that to
+catenate two lists, we can share the second list, which doesn&#8217;t get modified,
+but must copy all of the nodes in the first list just to modify the last one.</p>
+
+<p>In Scala, the function catenate on the built-in list type looks like the
+following:</p>
+
+<div><script src='https://gist.github.com/1692508.js?file='></script>
+<noscript><pre><code>def catenate[A](xs: List[A], ys: List[A]) : List[A] = xs match {
+  case Nil =&gt; ys
+  case x::xs =&gt; x :: (catenate(xs, ys))
+ }</code></pre></noscript></div>
+
+
+<p>Updating a single element of the list is similar. We have to copy all of the
+elements in the list up to the element to be updated, and then we can point the
+tail of the element we updated to the pre-existing tail of the old element,
+thus sharing as much data as possible.</p>
+
+<div><script src='https://gist.github.com/1692539.js?file='></script>
+<noscript><pre><code>def update[A](xs: List[A], i: Int, y: A) : List[A] = (xs, i) match {
+  case (Nil, _) =&gt; throw new AssertionError(&quot;Invalid subscript&quot;)
+  case (x::xs, 0) =&gt; y::xs
+  case (x::xs, i) =&gt; x::update(xs, i - 1, y)
+}</code></pre></noscript></div>
+
+
+<h3>Exercise 2.1</h3>
+
+<p>This exercise is straightforward: we must write a function that takes a generic
+list and returns a list of all of the suffix lists of the input list,
+from longest to shortest. We must show that this function operates in linear
+time and linear space with respect to the size of the input list.</p>
+
+<p>Since no elements are being updated, it&#8217;s easy to see that all we have to do is
+return a new list whose elements are every cons cell in the input list. This
+is O(n) in time, as we are performing one cons operation for each element in the
+input list, and O(n) in space, as we&#8217;re saving one cons cell per cons cell in
+the input list.</p>
+
+<div><script src='https://gist.github.com/1692330.js?file='></script>
+<noscript><pre><code>def suffixes[A](xs: List[A]): List[List[A]] = xs match {
+  case Nil =&gt; Nil::Nil
+  case x::xs =&gt; (x::xs)::suffixes(xs)</code></pre></noscript></div>
+
+
+<p>This was a pretty simple section, serving mainly as a refresher course in
+functional programming fundamentals.</p>
+
+<p>For this post, I reused Scala&#8217;s built-in List type to implement the exercise
+and example functions. I had intended to define my own abstract generic Stack,
+and show how it can be implemented with either the build-in List type or a set
+of case classes Nil and Cons, like Okasaki does using Standard ML. However, I&#8217;m
+still a Scala novice, and I ran into some difficulties with the type system
+that go over my head at this point. I plan to revisit this at a later date once
+I&#8217;ve learned a little bit more about Scala&#8217;s type system.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -189,18 +285,6 @@
     <a href="http://twitter.com/JordanALewis" class="twitter-follow-button" data-show-count="false">Follow @JordanALewis</a>
   
 </section>
-
-
-
-<section class="googleplus googleplus-hidden">
-  <h1>
-    <a href="https://plus.google.com/103410944693236881656?rel=author">
-      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
-      Google+
-    </a>
-  </h1>
-</section>
-
 
 <section>
   <h1><a href="http://last.fm/user/Crassworm">I listen to music</a>.</h1>

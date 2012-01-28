@@ -5,14 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Blog Archive - Jordan Lewis</title>
+  <title>Section 2.1 - Jordan Lewis</title>
   <meta name="author" content="Jordan Lewis">
 
   
-  <meta name="description" content="Blog Archive 2012 Section 2.1
-Jan 27 2012 posted in pfds Notes on Purely Functional Data Structures
-Jan 03 2012 posted in pfds Hello World
-Jan 02 &hellip;">
+  <meta name="description" content="This is the inaugural post of the PFDS series. Section 2.1 discusses the ramifications of implementing lists and stacks in a
+functional and immutable &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,7 +19,7 @@ Jan 02 &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://jordanlewis.org/blog/archives">
+  <link rel="canonical" href="http://jordanlewis.org/blog/2012/01/27/chapter-1-dot-1">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -84,64 +82,148 @@ Jan 02 &hellip;">
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Blog Archive</h1>
+    
+      <h1 class="entry-title">Section 2.1</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-27T22:09:00-05:00" pubdate data-updated="true">Jan 27<span>th</span>, 2012</time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives">
 
 
+<div class="entry-content"><p>This is the inaugural post of the PFDS series.</p>
 
-  
-  <h2>2012</h2>
+<p>Section 2.1 discusses the ramifications of implementing lists and stacks in a
+functional and immutable manner. Using the operation of <em>list catenation</em>
+as a motivator, Okasaki introduces the idea of data sharing. We see that to
+catenate two lists, we can share the second list, which doesn&#8217;t get modified,
+but must copy all of the nodes in the first list just to modify the last one.</p>
 
-<article>
-  
-<h1><a href="/blog/2012/01/27/chapter-1-dot-1/">Section 2.1</a></h1>
-<time datetime="2012-01-27T22:09:00-05:00" pubdate><span class='month'>Jan</span> <span class='day'>27</span> <span class='year'>2012</span></time>
+<p>In Scala, the function catenate on the built-in list type looks like the
+following:</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/pfds/'>pfds</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2012/01/03/notes-on-purely-functional-data-structures/">Notes on Purely Functional Data Structures</a></h1>
-<time datetime="2012-01-03T01:24:00-05:00" pubdate><span class='month'>Jan</span> <span class='day'>03</span> <span class='year'>2012</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/pfds/'>pfds</a></span>
-</footer>
+<div><script src='https://gist.github.com/1692508.js?file='></script>
+<noscript><pre><code>def catenate[A](xs: List[A], ys: List[A]) : List[A] = xs match {
+  case Nil =&gt; ys
+  case x::xs =&gt; x :: (catenate(xs, ys))
+ }</code></pre></noscript></div>
 
 
-</article>
+<p>Updating a single element of the list is similar. We have to copy all of the
+elements in the list up to the element to be updated, and then we can point the
+tail of the element we updated to the pre-existing tail of the old element,
+thus sharing as much data as possible.</p>
+
+<div><script src='https://gist.github.com/1692539.js?file='></script>
+<noscript><pre><code>def update[A](xs: List[A], i: Int, y: A) : List[A] = (xs, i) match {
+  case (Nil, _) =&gt; throw new AssertionError(&quot;Invalid subscript&quot;)
+  case (x::xs, 0) =&gt; y::xs
+  case (x::xs, i) =&gt; x::update(xs, i - 1, y)
+}</code></pre></noscript></div>
 
 
+<h3>Exercise 2.1</h3>
 
-<article>
-  
-<h1><a href="/blog/2012/01/02/hello-world/">Hello World</a></h1>
-<time datetime="2012-01-02T01:50:00-05:00" pubdate><span class='month'>Jan</span> <span class='day'>02</span> <span class='year'>2012</span></time>
+<p>This exercise is straightforward: we must write a function that takes a generic
+list and returns a list of all of the suffix lists of the input list,
+from longest to shortest. We must show that this function operates in linear
+time and linear space with respect to the size of the input list.</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/meta/'>meta</a></span>
-</footer>
+<p>Since no elements are being updated, it&#8217;s easy to see that all we have to do is
+return a new list whose elements are every cons cell in the input list. This
+is O(n) in time, as we are performing one cons operation for each element in the
+input list, and O(n) in space, as we&#8217;re saving one cons cell per cons cell in
+the input list.</p>
+
+<div><script src='https://gist.github.com/1692330.js?file='></script>
+<noscript><pre><code>def suffixes[A](xs: List[A]): List[List[A]] = xs match {
+  case Nil =&gt; Nil::Nil
+  case x::xs =&gt; (x::xs)::suffixes(xs)</code></pre></noscript></div>
 
 
-</article>
+<p>This was a pretty simple section, serving mainly as a refresher course in
+functional programming fundamentals.</p>
 
+<p>For this post, I reused Scala&#8217;s built-in List type to implement the exercise
+and example functions. I had intended to define my own abstract generic Stack,
+and show how it can be implemented with either the build-in List type or a set
+of case classes Nil and Cons, like Okasaki does using Standard ML. However, I&#8217;m
+still a Scala novice, and I ran into some difficulties with the type system
+that go over my head at this point. I plan to revisit this at a later date once
+I&#8217;ve learned a little bit more about Scala&#8217;s type system.</p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Jordan Lewis</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-27T22:09:00-05:00" pubdate data-updated="true">Jan 27<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/pfds/'>pfds</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/01/03/notes-on-purely-functional-data-structures/" title="Previous Post: Notes on Purely Functional Data Structures">&laquo; Notes on Purely Functional Data Structures</a>
+      
+      
+    </p>
+  </footer>
 </article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
 
@@ -222,7 +304,10 @@ Jan 02 &hellip;">
       var disqus_shortname = 'jordanlewis';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://jordanlewis.org/blog/2012/01/27/chapter-1-dot-1/';
+        var disqus_url = 'http://jordanlewis.org/blog/2012/01/27/chapter-1-dot-1/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
