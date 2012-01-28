@@ -1,0 +1,52 @@
+---
+layout: post
+title: "Section 2.1"
+date: 2012-01-27 22:09
+comments: true
+categories: pfds
+---
+This is the inaugural post of the PFDS series.
+
+Section 2.1 discusses the ramifications of implementing lists and stacks in a
+functional and immutable manner. Using the operation of <em>list catenation</em>
+as a motivator, Okasaki introduces the idea of data sharing. We see that to
+catenate two lists, we can share the second list, which doesn't get modified,
+but must copy all of the nodes in the first list just to modify the last one.
+
+In Scala, the function catenate on the built-in list type looks like the
+following:
+
+{% gist 1692508 %}
+
+Updating a single element of the list is similar. We have to copy all of the
+elements in the list up to the element to be updated, and then we can point the
+tail of the element we updated to the pre-existing tail of the old element,
+thus sharing as much data as possible.
+
+{% gist 1692539 %}
+
+### Exercise 2.1
+
+This exercise is straightforward: we must write a function that takes a generic
+list and returns a list of all of the suffix lists of the input list,
+from longest to shortest. We must show that this function operates in linear
+time and linear space with respect to the size of the input list.
+
+Since no elements are being updated, it's easy to see that all we have to do is
+return a new list whose elements are every cons cell in the input list. This
+is O(n) in time, as we are performing one cons operation for each element in the
+input list, and O(n) in space, as we're saving one cons cell per cons cell in
+the input list.
+
+{% gist 1692330 %}
+
+This was a pretty simple section, serving mainly as a refresher course in
+functional programming fundamentals.
+
+For this post, I reused Scala's built-in List type to implement the exercise
+and example functions. I had intended to define my own abstract generic Stack,
+and show how it can be implemented with either the build-in List type or a set
+of case classes Nil and Cons, like Okasaki does using Standard ML. However, I'm
+still a Scala novice, and I ran into some difficulties with the type system
+that go over my head at this point. I plan to revisit this at a later date once
+I've learned a little bit more about Scala's type system.
