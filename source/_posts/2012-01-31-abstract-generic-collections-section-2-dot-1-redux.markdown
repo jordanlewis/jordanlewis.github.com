@@ -55,7 +55,7 @@ However, to keep compile-time type checking sound, Scala has to impose some
 restrictions on the types of methods in classes with covariant type parameters,
 due to the problem of mutability: a mutable array of type T is actually
 *contravariant* in its type parameter, because if you had an Array of type
-Any, updating one if its cells to be a subtype of Any like String is not always
+Any, updating one of its cells to be a subtype of Any like String is not always
 legal. So, in our Stack example, we can no longer simply say
     def cons(x: T) : Stack[T]
 because the x is appearing in a *contravariant* position, meaning that it has
