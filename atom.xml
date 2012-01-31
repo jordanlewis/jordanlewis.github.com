@@ -4,7 +4,7 @@
   <title><![CDATA[Jordan Lewis]]></title>
   <link href="http://jordanlewis.org/atom.xml" rel="self"/>
   <link href="http://jordanlewis.org/"/>
-  <updated>2012-01-31T02:10:03-05:00</updated>
+  <updated>2012-01-31T10:38:54-05:00</updated>
   <id>http://jordanlewis.org/</id>
   <author>
     <name><![CDATA[Jordan Lewis]]></name>
@@ -77,7 +77,7 @@ goes for our Stack type, so we mark its type parameter up as covariant.</p>
 restrictions on the types of methods in classes with covariant type parameters,
 due to the problem of mutability: a mutable array of type T is actually
 <em>contravariant</em> in its type parameter, because if you had an Array of type
-Any, updating one if its cells to be a subtype of Any like String is not always
+Any, updating one of its cells to be a subtype of Any like String is not always
 legal. So, in our Stack example, we can no longer simply say</p>
 
 <pre><code>def cons(x: T) : Stack[T]
