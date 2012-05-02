@@ -1,0 +1,453 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>PFDS Section 2.2 - Jordan Lewis</title>
+  <meta name="author" content="Jordan Lewis">
+
+  
+  <meta name="description" content="Section 2.2 presents immutable sets implemented with unbalanced binary search
+trees, a slightly more complex example of immutable data sharing than &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://jordanlewis.org/blog/2012/05/01/pfds-section-2-dot-2">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Jordan Lewis" type="application/atom+xml">
+  <link type="text/plain" rel="author" href="http://jordanlewis.org/humans.txt" />
+
+<link rel="openid2.provider" href="https://www.google.com/accounts/o8/ud?source=profiles" />
+<link rel="openid2.local_id" href="http://www.google.com/profiles/jordanthelewis" />
+<link rel="openid.server" href="http://www.myopenid.com/server" />
+<link rel="openid.delegate" href="http://jordanlewis.myopenid.com/" />
+
+<!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-21083142-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Jordan Lewis</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:jordanlewis.org" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Home</a></li>
+  <li><a href="/about">About Me</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">PFDS Section 2.2</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-01T16:33:00-04:00" pubdate data-updated="true">May 1<span>st</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>Section 2.2 presents immutable sets implemented with unbalanced binary search
+trees, a slightly more complex example of immutable data sharing than the list
+example in <a href="/blog/2012/01/27/chapter-1-dot-1/">Section 2.1</a>. My
+first challenge was to reimplement Okasaki&#8217;s base implementation of unbalanced
+binary search tree sets using idiomatic Scala. I had to learn a fair amount
+more about Scala&#8217;s type system to be able to write such an implementation, so I
+figured I&#8217;d write up some of the things I learned about Scala in the process as
+well as the implementation.</p>
+
+<h2>A generic trait for sets</h2>
+
+<p>Okasaki&#8217;s set interface contains two methods, <code>insert</code> and <code>member</code>. Similar to
+the generic stack trait implementation that I wrote about
+<a href="/blog/2012/01/31/abstract-generic-collections-section-2-dot-1-redux/">last time</a>
+, we can easily create this interface as a generic trait in Scala.</p>
+
+<div><script src='https://gist.github.com/2565386.js?file='></script>
+<noscript><pre><code>trait Set[T] {
+  def insert(x: T): Set[T]
+  def member(x: T): Boolean
+}</code></pre></noscript></div>
+
+
+<h2>Unbalanced binary search trees</h2>
+
+<p>Unbalanced binary search trees are a great choice for a simple implementation
+of Okasaki&#8217;s set interface, since <code>insert</code> and <code>member</code> in an unbalanced binary
+search tree both take on average <code>O(log n)</code> time in the number of elements in
+the tree, or <code>O(n)</code> time in the pathological case where each subsequent insert
+is greater than the last.</p>
+
+<p>I decided to follow Okasaki&#8217;s functor-like pattern for the implementation, so
+I wrote a simple binary tree data type using case classes. This allows us to
+use Scala&#8217;s pattern matching feature in our implementation of the binary search
+tree.</p>
+
+<div><script src='https://gist.github.com/2573618.js?file='></script>
+<noscript><pre><code>sealed abstract class BinaryTree[+T]
+case object BinaryTreeLeaf extends BinaryTree[Nothing]
+final case class BinaryTreeNode[T](left: BinaryTree[T], value: T, right: BinaryTree[T]) extends BinaryTree[T]</code></pre></noscript></div>
+
+
+<p>Binary search trees rely on the ordering of the type of element that they&#8217;re
+storing, so a generic binary search tree implementation similarly must require
+that its type parameter has an order. In Scala, this can be accomplished with
+either of two methods: either by using a <em>view bound</em> on the type parameter to
+require that it be implicitly convertable to an Ordered type, or by requiring
+an instance of Ordering, parameterized on the binary tree&#8217;s input type, as a
+value parameter.</p>
+
+<p>In trying to write the most Scala-idiomatic version of the data structure, I
+ended up investigating both methods before deciding on one, since it wasn&#8217;t
+obvious at first which method would be the simplest. If you&#8217;re already familiar
+with Scala view bounds and type orderings, or if you just want to get to the
+implementation of the 2.2 data structures already, then you should skip right
+ahead to <a href="#implementation">the implementation</a>.</p>
+
+<h3>View bounds</h3>
+
+<p>A view bound is specified by the <code>&lt;%</code> operator. Specifying <code>T &lt;% U</code> in a type
+parameter adds the restriction that the type parameter <code>T</code> must be <em>implicitly
+convertible</em> to <code>U</code>, which is true when there exists a method</p>
+
+<pre><code>implicit def t2u(t: T): U
+</code></pre>
+
+<p>somewhere in the current scope. In our case, we&#8217;re interested in view bounding
+<code>T</code> by <code>Ordered[T]</code>, which will give us access to the comparison methods (<code>&lt;</code>,
+<code>&gt;</code>, etc) defined on the <code>Ordered[T]</code> type for values of type <code>T</code>.</p>
+
+<p>For example, to implement a generic less-than function lt that utilizes the
+<code>&lt;</code> method on the input type&#8217;s <code>Ordered</code> implementation, we write</p>
+
+<pre><code>def lt[T &lt;% Ordered[T]](x: T, y: T): Boolean = x &lt; y
+</code></pre>
+
+<p>Without specifying the view bound on <code>T</code>, we would not have access
+to the <code>&lt;</code> method on <code>x</code>, since it is not defined for any arbitrary
+type <code>T</code>.</p>
+
+<h3>Ordering instances</h3>
+
+<p>The other Scala-idiomatic way to provide or access the ordering of a type <code>T</code>
+is through objects that implement the trait <code>Ordering[T]</code>. An object that
+implements <code>Ordering[T]</code> provides the <code>compare(x: T, y: T)</code> method, which acts
+as the underlying implementation for the trait&#8217;s other methods, which include
+<code>lt(x: T, y: T)</code>, <code>gt(x: T, y: T)</code>, and the like.</p>
+
+<p>For example, to implement a generic less-than function lt that utilizes the
+<code>lt</code> method on the input type&#8217;s <code>Ordering</code>
+implementation, we could write the curried method</p>
+
+<pre><code>def lt[T](x: T, y: T)(implicit val ordering: Ordering[T]): Boolean = ordering.lt(x, y)
+</code></pre>
+
+<p>Note that we don&#8217;t have to specify a type bound on <code>T</code>, but we still ensure
+that <code>T</code> is comparable at the type system level by requiring as an argument an
+ordering object that&#8217;s parameterized on <code>T</code>. We make the ordering an implicit
+and curried argument, so that if <code>T</code> has an implicit conversion to
+<code>Ordering[T]</code>, as most of Scala&#8217;s comparable types do, the user doesn&#8217;t have to
+explicitly pass in the ordering.</p>
+
+<p>Using instances of <code>Ordering[T]</code> makes your code slightly less pretty, as you
+can no longer write <code>x &lt; y</code>, you have to instead write <code>ordering.lt(x, y)</code>, but
+it makes more explicit what&#8217;s going on under the hood. It wouldn&#8217;t necessarily
+be obvious that writing <code>x &lt; y</code> where <code>x</code> and <code>y</code> are instances of type <code>T &lt;%
+Ordered[T]</code> actually invokes the <code>&lt;</code> method on whatever <code>Ordered[T]</code> object <code>x</code>
+and <code>y</code> are implicitly convertible to. I think I prefer the more explicit
+version using <code>Ordering[T]</code>, but that&#8217;s probably because using implicit
+conversions at all leaves me with a funny taste in my mouth. It seems to me
+that overusing implicit conversions would lead to a special hell of confusing
+spaghetti code.</p>
+
+<p><a id="implementation"></a></p>
+
+<h2>Scala implementation of unbalanced binary tree sets</h2>
+
+<p>For the implementation, I wrote the actual <code>insert</code> and <code>member</code> logic as
+private methods on a utility object. The class that actually implements the Set
+trait uses the utility object as its underlying implementation. I used Scala&#8217;s
+<em>companion object</em> idiom to structure the whole thing in an elegant way.</p>
+
+<p>Here&#8217;s the companion object that contains the underlying implementation logic:</p>
+
+<div><script src='https://gist.github.com/2573799.js?file='></script>
+<noscript><pre><code>object UnbalancedTreeSet {
+  private def insert[T](x: T, t: BinaryTree[T])(implicit ordering: Ordering[T]): BinaryTree[T] = t match {
+    case BinaryTreeLeaf =&gt; BinaryTreeNode(BinaryTreeLeaf, x, BinaryTreeLeaf)
+    case tn @ BinaryTreeNode(a, y, b) =&gt;
+      if (ordering.lt(x, y)) BinaryTreeNode(insert(x, a), y, b)
+      else if (ordering.lt(y, x)) BinaryTreeNode(a, y, insert(x, b))
+      else tn
+  }
+  private def member[T](x: T, t: BinaryTree[T])(implicit ordering: Ordering[T]): Boolean = (x, t) match {
+    case (_, BinaryTreeLeaf) =&gt; false
+    case (_, BinaryTreeNode(a, y, b)) =&gt;
+      if (ordering.lt(x, y)) member(x, a)
+      else if (ordering.lt(y, x)) member(x, b)
+      else true
+  }
+}</code></pre></noscript></div>
+
+
+<p>And here&#8217;s the class that actually implements the Set interface using the
+companion object:</p>
+
+<div><script src='https://gist.github.com/2573976.js?file='></script>
+<noscript><pre><code>class UnbalancedTreeSet[T] private (tree: BinaryTree[T]) (implicit val ordering: Ordering[T])
+  extends Set[T] {
+
+  def this()(implicit ordering : Ordering[T]) = this(BinaryTreeLeaf)(ordering)
+  private def newSet(tree: BinaryTree[T]) = new UnbalancedTreeSet[T](tree);
+
+  def insert(x: T) = newSet(UnbalancedTreeSet.insert(x, tree))
+  def member(x: T) = UnbalancedTreeSet.member(x, tree)
+}</code></pre></noscript></div>
+
+
+<p>You can see the code in its entirety, as well as a small unit test, on
+<a href="https://github.com/jordanlewis/PFDScala">GitHub</a>. Next time I&#8217;ll implement
+solutions for section 2.2&#8217;s exercises.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Jordan Lewis</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-01T16:33:00-04:00" pubdate data-updated="true">May 1<span>st</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/pfds/'>pfds</a>, <a class='category' href='/blog/categories/scala/'>scala</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/01/31/abstract-generic-collections-section-2-dot-1-redux/" title="Previous Post: Abstract Generic Collections: PFDS Section 2.1 Redux">&laquo; Abstract Generic Collections: PFDS Section 2.1 Redux</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Hi, I'm <a href="about">Jordan Lewis</a>.</h1>
+  <p>I work at <a href="http://knewton.com">Knewton</a> and live in Brooklyn, New York.</p>
+</section>
+
+<section>
+  <h1><a href="http://twitter.com/JordanALewis">I tweet</a>.</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("JordanALewis", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/JordanALewis" class="twitter-follow-button" data-show-count="false">Follow @JordanALewis</a>
+  
+</section>
+
+
+
+<section class="googleplus googleplus-hidden">
+  <h1>
+    <a href="https://plus.google.com/103410944693236881656?rel=author">
+      <img src="http://www.google.com/images/icons/ui/gprofile_button-32.png" width="32" height="32">
+      Google+
+    </a>
+  </h1>
+</section>
+
+
+<section>
+  <h1><a href="http://last.fm/user/Crassworm">I listen to music</a>.</h1>
+  <script type="text/javascript" src="http://last.aelabs.net/js/recent.js?u=Crassworm&amp;limit=5"></script>
+
+</section>
+
+<section>
+  <h1><a href="https://github.com/jordanlewis">I write open source software</a>.</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/jordanlewis">@jordanlewis</a> on Github
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'jordanlewis',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 - Jordan Lewis -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'jordanlewis';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://jordanlewis.org/blog/2012/05/01/pfds-section-2-dot-2/';
+        var disqus_url = 'http://jordanlewis.org/blog/2012/05/01/pfds-section-2-dot-2/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
