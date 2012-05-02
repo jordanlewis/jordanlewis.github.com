@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Section 2.1"
+title: "PFDS Section 2.1"
 date: 2012-01-27 22:09
 comments: true
 categories: pfds scala

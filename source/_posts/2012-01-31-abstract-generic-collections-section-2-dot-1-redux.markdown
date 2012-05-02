@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Abstract Generic Collections: Section 2.1 Redux"
+title: "Abstract Generic Collections: PFDS Section 2.1 Redux"
 date: 2012-01-31 00:34
 comments: true
 categories: pfds scala
