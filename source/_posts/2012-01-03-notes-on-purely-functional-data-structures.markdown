@@ -3,7 +3,7 @@ layout: post
 title: "Notes on Purely Functional Data Structures"
 date: 2012-01-03 01:24
 comments: true
-categories: pfds
+categories: pfds scala
 ---
 I heard a lot of good things about Mike Okasaki's <a href="http://www.amazon.com/gp/product/0521663504/ref=as_li_qf_sp_asin_tl?ie=UTF8&tag=jordanlewisor-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=0521663504">Purely Functional Data Structures</a><img src="http://www.assoc-amazon.com/e/ir?t=jordanlewisor-20&l=as2&o=1&a=0521663504" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /> at UChicago, but didn't ever take the time to check it out. Lately I've missed the heady joy of reading and writing code in a strongly typed functional programming language like Standard ML, so when one of my coworkers at Knewton mentioned he was going to read the book I decided to get a copy for myself.
 

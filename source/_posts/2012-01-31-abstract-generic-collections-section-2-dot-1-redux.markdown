@@ -3,7 +3,7 @@ layout: post
 title: "Abstract Generic Collections: Section 2.1 Redux"
 date: 2012-01-31 00:34
 comments: true
-categories: pfds
+categories: pfds scala
 ---
 At the end of my last post, I mentioned that I ended up reusing Scala's build-in
 List collection to implement the exercises instead of writing a generic abstract
