@@ -126,7 +126,7 @@ well as the implementation.</p>
 <p>Okasaki&#8217;s set interface contains two methods, <code>insert</code> and <code>member</code>. Similar to
 the generic stack trait implementation that I wrote about
 <a href="/blog/2012/01/31/abstract-generic-collections-section-2-dot-1-redux/">last time</a>
-, we can easily create this interface as a generic trait in Scala.</p>
+, it&#8217;s easy to create this interface as a generic trait in Scala.</p>
 
 <div><script src='https://gist.github.com/2565386.js?file='></script>
 <noscript><pre><code>trait Set[T] {
@@ -144,8 +144,8 @@ the tree, or <code>O(n)</code> time in the pathological case where each subseque
 is greater than the last.</p>
 
 <p>I decided to follow Okasaki&#8217;s functor-like pattern for the implementation, so
-I wrote a simple binary tree data type using case classes. This allows us to
-use Scala&#8217;s pattern matching feature in our implementation of the binary search
+I wrote a simple binary tree data type using case classes. This allowed me to
+use Scala&#8217;s pattern matching feature in my implementation of the binary search
 tree.</p>
 
 <div><script src='https://gist.github.com/2573618.js?file='></script>
