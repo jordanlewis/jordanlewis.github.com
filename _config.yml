@@ -101,3 +101,5 @@ facebook_like: false
 
 # Last.fm
 lastfm_user: Crassworm
+lastfm_apikey: 1d8171170519840fc2cc0a275d90bfd8
+lastfm_count: 10
