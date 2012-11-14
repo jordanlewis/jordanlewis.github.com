@@ -697,20 +697,16 @@ I&#8217;ve learned a little bit more about Scala&#8217;s type system.</p>
 
 <section class="lastfm">
   <h1><a href="http://last.fm/user/Crassworm">I listen to music</a>.</h1>
-<style type="text/css">
-  #lastfmList li{ text-align: left; }
-</style>
-<ul id="lastfmList">
-  <li class="loading">Updating tracks&#8230;</li>
-</ul>
-
-<script type="text/javascript">
-  $.domReady(function(){
-    getLastfmFeed("Crassworm", 10, "1d8171170519840fc2cc0a275d90bfd8");
-  });
-</script>
-
-<script lang="Javascript">
+  <style type="text/css">
+    #lastfmList li{ text-align: left; }
+  </style>
+  <ul id="lastfmList">
+    <li class="loading">Updating tracks&#8230;</li>
+  </ul>
+  <script type="text/javascript">
+$.domReady(function(){
+  getLastfmFeed("Crassworm", 10, "1d8171170519840fc2cc0a275d90bfd8");
+});
 function getLastfmFeed(user,count,api_key) {
   count = parseInt(count, 10);
   $.ajax({
@@ -725,7 +721,7 @@ function showLastfmFeed(xml){
   var tracklist = document.getElementById('lastfmList'),
       content = '',
       i=0;
-  
+
   $(xml.responseXML).find("recenttracks").children().each(function(){
     var artist = $(this).find('artist').text(),
         name = $(this).find('name').text(),
@@ -737,10 +733,7 @@ function showLastfmFeed(xml){
 
   tracklist.innerHTML = content;
 }
-</script>
-</section>
-  <script type="text/javascript" src="http://last.aelabs.net/js/recent.js?u=Crassworm&amp;limit=5"></script>
-
+  </script>
 </section>
 
 <section>
