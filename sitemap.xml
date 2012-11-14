@@ -2,38 +2,38 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>http://jordanlewis.org/blog/2012/01/02/hello-world/</loc>
-        <lastmod>2012-11-14T00:54:35-05:00</lastmod>
+        <lastmod>2012-11-14T01:00:38-05:00</lastmod>
     </url>
     <url>
         <loc>
             http://jordanlewis.org/blog/2012/01/03/notes-on-purely-functional-data-structures/
         </loc>
-        <lastmod>2012-11-14T00:54:35-05:00</lastmod>
+        <lastmod>2012-11-14T01:00:38-05:00</lastmod>
     </url>
     <url>
         <loc>http://jordanlewis.org/blog/2012/01/27/chapter-1-dot-1/</loc>
-        <lastmod>2012-11-14T00:54:35-05:00</lastmod>
+        <lastmod>2012-11-14T01:00:38-05:00</lastmod>
     </url>
     <url>
         <loc>
             http://jordanlewis.org/blog/2012/01/31/abstract-generic-collections-section-2-dot-1-redux/
         </loc>
-        <lastmod>2012-11-14T00:54:35-05:00</lastmod>
+        <lastmod>2012-11-14T01:00:38-05:00</lastmod>
     </url>
     <url>
         <loc>http://jordanlewis.org/blog/2012/05/01/pfds-section-2-dot-2/</loc>
-        <lastmod>2012-11-14T00:54:35-05:00</lastmod>
+        <lastmod>2012-11-14T01:00:38-05:00</lastmod>
     </url>
     <url>
         <loc>http://jordanlewis.org/about/</loc>
-        <lastmod>2012-11-14T00:54:35-05:00</lastmod>
+        <lastmod>2012-11-14T01:00:10-05:00</lastmod>
     </url>
     <url>
         <loc>http://jordanlewis.org/blog/archives/</loc>
-        <lastmod>2012-11-14T00:54:35-05:00</lastmod>
+        <lastmod>2012-11-14T01:00:10-05:00</lastmod>
     </url>
     <url>
         <loc>http://jordanlewis.org/</loc>
-        <lastmod>2012-11-14T00:54:35-05:00</lastmod>
+        <lastmod>2012-11-14T01:00:10-05:00</lastmod>
     </url>
 </urlset>
