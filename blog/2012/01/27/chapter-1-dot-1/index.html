@@ -120,7 +120,7 @@ but must copy all of the nodes in the first list just to modify the last one.</p
 <p>In Scala, the function catenate on the built-in list type looks like the
 following:</p>
 
-<div><script src='https://gist.github.com/1692508.js?file='></script>
+<div><script src='https://gist.github.com/1692508.js'></script>
 <noscript><pre><code>def catenate[A](xs: List[A], ys: List[A]) : List[A] = xs match {
   case Nil =&gt; ys
   case x::xs =&gt; x :: (catenate(xs, ys))
@@ -132,7 +132,7 @@ elements in the list up to the element to be updated, and then we can point the
 tail of the element we updated to the pre-existing tail of the old element,
 thus sharing as much data as possible.</p>
 
-<div><script src='https://gist.github.com/1692539.js?file='></script>
+<div><script src='https://gist.github.com/1692539.js'></script>
 <noscript><pre><code>def update[A](xs: List[A], i: Int, y: A) : List[A] = (xs, i) match {
   case (Nil, _) =&gt; throw new AssertionError(&quot;Invalid subscript&quot;)
   case (x::xs, 0) =&gt; y::xs
@@ -153,7 +153,7 @@ is O(n) in time, as we are performing one cons operation for each element in the
 input list, and O(n) in space, as we&#8217;re saving one cons cell per cons cell in
 the input list.</p>
 
-<div><script src='https://gist.github.com/1692330.js?file='></script>
+<div><script src='https://gist.github.com/1692330.js'></script>
 <noscript><pre><code>def suffixes[A](xs: List[A]): List[List[A]] = xs match {
   case Nil =&gt; Nil::Nil
   case x::xs =&gt; (x::xs)::suffixes(xs)</code></pre></noscript></div>

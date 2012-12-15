@@ -4,7 +4,7 @@
   <title><![CDATA[Jordan Lewis]]></title>
   <link href="http://jordanlewis.org/atom.xml" rel="self"/>
   <link href="http://jordanlewis.org/"/>
-  <updated>2012-11-14T14:08:50-05:00</updated>
+  <updated>2012-12-15T11:02:29-05:00</updated>
   <id>http://jordanlewis.org/</id>
   <author>
     <name><![CDATA[Jordan Lewis]]></name>
@@ -12,6 +12,231 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Exercises from PFDS Section 2.2]]></title>
+    <link href="http://jordanlewis.org/blog/2012/12/04/pfds-section-2-dot-2-exercises/"/>
+    <updated>2012-12-04T18:48:00-05:00</updated>
+    <id>http://jordanlewis.org/blog/2012/12/04/pfds-section-2-dot-2-exercises</id>
+    <content type="html"><![CDATA[<p>Section 2.2&#8217;s exercises define some optimizations to the section&#8217;s unbalanced
+tree set implementation.</p>
+
+<h2>Exercise 2.2</h2>
+
+<p>The implementation of <code>member</code> that Okasaki gives for binary search trees in
+section 2.2 performs <code>2d</code> comparisons for a tree of depth <code>d</code> in the worst
+case, when searching for a number that is the farthest to the right on the
+tree, and when the right path in the tree is of depth <code>d</code> itself. This is
+because every call of <code>member</code> checks whether <code>x &lt; y</code> and, if not, whether <code>y &lt;
+x</code>. This strategy allows immediate detection of the case in which the value
+being searched for is contained in the current node, permitting short-circuit
+cases like where the searched-for value is in the root node, at the cost of
+requiring double the comparisons when traversing rightward.</p>
+
+<p>Exercise 2.2 proposes a strategy in which the second comparison is delayed
+until the bottom of the tree. This removes the <code>2d</code> worst-case number of
+comparisons, at the cost of raising the minimum number of comparisons to the
+number of nodes in the shortest path from the root to a leaf. The implementation
+is relatively straightforward:</p>
+
+<div><script src='https://gist.github.com/4206836.js'></script>
+<noscript><pre><code>class UnbalancedTreeSet[T] private (tree: BinaryTree[T]) (implicit val ordering: Ordering[T]) extends Set[T] {
+  // ...
+  def member(x: T) = UnbalancedTreeSet.member(x, tree, None)
+  // ...
+}
+
+object UnbalancedTreeSet {
+  // ...
+  private def member[T](x: T, t: BinaryTree[T], c: Option[T])(implicit ordering: Ordering[T]): Boolean = (t, c) match {
+    case (BinaryTreeLeaf, None) =&gt; false
+    case (BinaryTreeLeaf, Some(d)) =&gt; ordering.equiv(x, d)
+    case (BinaryTreeNode(a, y, b), _) =&gt;
+      if (ordering.lt(x, y)) member(x, a, c)
+      else member(x, b, Some(y))
+  }
+  // ...
+}  </code></pre></noscript></div>
+
+
+<p>We introduce a new parameter to <code>member</code>, <code>c: Option[T]</code>, which is <code>None</code> when
+there is not yet a candidate for equality, and <code>Some(d)</code> when <code>d</code> is a candidate
+for equality. Then, when we reach a leaf node, we check to see whether our
+candidate is equal to the value we&#8217;re searching for.</p>
+
+<h2>Exercise 2.3</h2>
+
+<p>Exercise 2.3 proposes an optimization to <code>insert</code>. The implementation given by
+Okasaki performs wasteful path copying when the value being inserted is already
+in the tree. If the value being inserted is present in a particular node, the
+only thing that&#8217;s done is to short-circuit the operation and return the node
+as it exists, which doesn&#8217;t reverse any of the path copying performed while
+traversing the tree down to the node.</p>
+
+<p>Throwing an exception in the case where the element being inserted already
+exists avoids the wasteful path copying. Okasaki requires that the function
+establish only one exception handler per insert, not per function call, so we
+catch the exception in the helper <code>insert</code> method of the UnbalancedTreeSet
+class.</p>
+
+<div><script src='https://gist.github.com/4206895.js'></script>
+<noscript><pre><code>class ElementAlreadyExistsException extends RuntimeException
+
+class UnbalancedTreeSet[T] private (tree: BinaryTree[T]) (implicit val ordering: Ordering[T]) extends Set[T] {
+  // ...
+  def insert(x: T) = try {
+    newSet(UnbalancedTreeSet.insert(x, tree))
+  } catch {
+    case _:ElementAlreadyExistsException =&gt; this
+  }
+  // ...
+}
+ 
+object UnbalancedTreeSet {
+  // ...
+  private def insert[T](x: T, t: BinaryTree[T])(implicit ordering: Ordering[T]): BinaryTree[T] = t match {
+    case BinaryTreeLeaf =&gt; BinaryTreeNode(BinaryTreeLeaf, x, BinaryTreeLeaf)
+    case BinaryTreeNode(a, y, b) =&gt;
+      if (ordering.lt(x, y)) BinaryTreeNode(insert(x, a), y, b)
+      else if (ordering.lt(y, x)) BinaryTreeNode(a, y, insert(x, b))
+      else throw new ElementAlreadyExistsException
+  }
+  // ...
+}</code></pre></noscript></div>
+
+
+<h2>Exercise 2.4</h2>
+
+<p>Exercise 2.4 is to integrate the improvements to <code>member</code> from exercise 2.2
+into the improved version of <code>insert</code> from 2.3. This is straightforward: we
+follow the pattern established by 2.2, threading an equality candidate through
+the recursive calls, and checking for equality only at the end. Now <code>insert</code>
+performs no unnecessary path copying if inserting a pre-existing element, and
+performs at most <code>d + 1</code> comparisons along the way.</p>
+
+<div><script src='https://gist.github.com/4207683.js'></script>
+<noscript><pre><code>class ElementAlreadyExistsException extends RuntimeException
+
+class UnbalancedTreeSet[T] private (tree: BinaryTree[T]) (implicit val ordering: Ordering[T]) extends Set[T] {
+  // ...
+  def insert(x: T) = try {
+    newSet(UnbalancedTreeSet.insert(x, tree, None))
+  } catch {
+    case _:ElementAlreadyExistsException =&gt; this
+  }
+  // ...
+}
+ 
+object UnbalancedTreeSet {
+  // ...
+  private def insert[T](x: T, t: BinaryTree[T], c: Option[T])(implicit ordering: Ordering[T]): BinaryTree[T] =
+  (t, c) match {
+    case (BinaryTreeLeaf, None) =&gt; BinaryTreeNode(BinaryTreeLeaf, x, BinaryTreeLeaf)
+    case (BinaryTreeLeaf, Some(d)) =&gt;
+      if (ordering.equiv(x, d)) throw new ElementAlreadyExistsException
+      else BinaryTreeNode(BinaryTreeLeaf, x, BinaryTreeLeaf)
+    case (BinaryTreeNode(a, y, b), _) =&gt;
+      if (ordering.lt(x, y)) BinaryTreeNode(insert(x, a, c), y, b)
+      else BinaryTreeNode(a, y, insert(x, b, Some(y)))
+  }
+  // ...
+}</code></pre></noscript></div>
+
+
+<h2>Exercise 2.5</h2>
+
+<p>Exercise 2.5 is about generating balanced binary trees that share as much as
+possible. The exercise assumes that all of the values in the trees are the same,
+which doesn&#8217;t make much sense for the set abstraction, but ensures that all
+subtrees of the same size are identical.</p>
+
+<p>For the first part, we implement a function <code>complete</code> that creates a complete
+tree of <code>d</code> levels. As a binary tree, it should have <code>2^d - 1</code> values inside.
+The implementation is a straightforward recursive function. The base case, a
+binary tree of 0 levels, is just a leaf node. The recursive case creates an
+internal node whose children are both the result of recursing with one less
+level.</p>
+
+<p>For the second part, we implement a function <code>balanced</code> that creates a tree
+with <code>d</code> values that is as balanced as possible: every internal node&#8217;s subtrees
+differ in size by at most 1.</p>
+
+<p>I put both of these methods directly on BinaryTree&#8217;s companion object. I think
+this is idiomatic, but it&#8217;s not really clear to me: there are so many different
+ways to do things in Scala.</p>
+
+<div><script src='https://gist.github.com/4210143.js'></script>
+<noscript><pre><code>object BinaryTree {
+  def complete[T](x: T, d: Int): BinaryTree[T] = d match {
+    case 0 =&gt; BinaryTreeLeaf
+    case _ =&gt; {
+      val subtree = complete(x, d - 1)
+      BinaryTreeNode(subtree, x, subtree)
+    }
+  }
+
+  def balanced[T](x: T, d: Int)(implicit ordering: Ordering[T]): BinaryTree[T] = d match {
+    case 0 =&gt; BinaryTreeLeaf
+    case 1 =&gt; BinaryTreeNode(BinaryTreeLeaf, x, BinaryTreeLeaf)
+    case _ =&gt; {
+      val half = d / 2
+      val halftree = create(x, half)
+      if (half * 2 == d) BinaryTreeNode(halftree, x, create(x, half - 1))
+      else BinaryTreeNode(halftree, x, halftree)
+    }
+  }
+}
+</code></pre></noscript></div>
+
+
+<p>I wrote a few tests for the tree generation functions in a normal
+assertion-based style before remembering the existence of
+<a href="https://github.com/rickynils/scalacheck">ScalaCheck</a> and its obvious
+applicability for this kind of thing. I&#8217;ve been itching to use a
+QuickCheck-style testing framework for a while. If you haven&#8217;t seen it before,
+you should definitely check it out. It allows you to write tests in a
+declarative style, without specifying individual test cases. The framework
+will generate random test cases for you, either by using built-in random
+generators for simple cases like arbitrary strings or integers, or by using
+a user-defined random object generator.</p>
+
+<p>In this case, since I wanted my test cases to vary the number of levels or
+nodes in a balanced tree, I was able to just use the built-in random integer
+generator. Writing tests in this way is concise and fun. Here&#8217;s what they ended
+up looking like:</p>
+
+<div><script src='https://gist.github.com/4210365.js'></script>
+<noscript><pre><code>class BinaryTreeTest extends Spec with ShouldMatchers with Checkers {
+  describe(&quot;A complete tree&quot;) {
+    it(&quot;should have 2^n - 1 nodes&quot;) {
+      check(forAll(choose(0, 25)){n: Int =&gt;
+          BinaryTree.complete(0, n).size == scala.math.pow(2, n) - 1 })
+    }
+  }
+
+  describe(&quot;A balanced tree&quot;) {
+    it(&quot;should have n nodes&quot;) {
+      check(forAll(choose(0, 100)){n: Int =&gt;
+          BinaryTree.balanced(0, n).size == n})
+    }
+  }
+}
+</code></pre></noscript></div>
+
+
+<h2>Exercise 2.6</h2>
+
+<p>This exercise asks the reader to modify UnbalancedTreeSet so that it represents
+a map instead of a set. This is very straightforward, if tedious: we must add
+another data member to <code>BinaryTreeNode</code> that represents the value of an entry
+in the map, change <code>member</code> to <code>lookup</code> and have it return the value data
+member instead of true, and throw an exception instead of false, and finally
+change <code>insert</code> to <code>bind</code>, give it an extra value argument, and set the
+<code>BinaryTreeNode</code>&#8217;s value field to that argument. I didn&#8217;t implement this.</p>
+
+<p>As usual, the new code&#8217;s on <a href="https://github.com/jordanlewis/PFDScala">GitHub</a>.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[PFDS Section 2.2]]></title>
@@ -34,7 +259,7 @@ the generic stack trait implementation that I wrote about
 <a href="http://jordanlewis.org/blog/2012/01/31/abstract-generic-collections-section-2-dot-1-redux/">last time</a>
 , it&#8217;s easy to create this interface as a generic trait in Scala.</p>
 
-<div><script src='https://gist.github.com/2565386.js?file='></script>
+<div><script src='https://gist.github.com/2565386.js'></script>
 <noscript><pre><code>trait Set[T] {
   def insert(x: T): Set[T]
   def member(x: T): Boolean
@@ -54,7 +279,7 @@ I wrote a simple binary tree data type using case classes. This allowed me to
 use Scala&#8217;s pattern matching feature in my implementation of the binary search
 tree.</p>
 
-<div><script src='https://gist.github.com/2573618.js?file='></script>
+<div><script src='https://gist.github.com/2573618.js'></script>
 <noscript><pre><code>sealed abstract class BinaryTree[+T]
 case object BinaryTreeLeaf extends BinaryTree[Nothing]
 final case class BinaryTreeNode[T](left: BinaryTree[T], value: T, right: BinaryTree[T]) extends BinaryTree[T]</code></pre></noscript></div>
@@ -142,7 +367,7 @@ trait uses the utility object as its underlying implementation. I used Scala&#82
 
 <p>Here&#8217;s the companion object that contains the underlying implementation logic:</p>
 
-<div><script src='https://gist.github.com/2573799.js?file='></script>
+<div><script src='https://gist.github.com/2573799.js'></script>
 <noscript><pre><code>object UnbalancedTreeSet {
   private def insert[T](x: T, t: BinaryTree[T])(implicit ordering: Ordering[T]): BinaryTree[T] = t match {
     case BinaryTreeLeaf =&gt; BinaryTreeNode(BinaryTreeLeaf, x, BinaryTreeLeaf)
@@ -164,7 +389,7 @@ trait uses the utility object as its underlying implementation. I used Scala&#82
 <p>And here&#8217;s the class that actually implements the Set interface using the
 companion object:</p>
 
-<div><script src='https://gist.github.com/2573976.js?file='></script>
+<div><script src='https://gist.github.com/2573976.js'></script>
 <noscript><pre><code>class UnbalancedTreeSet[T] private (tree: BinaryTree[T]) (implicit val ordering: Ordering[T])
   extends Set[T] {
 
@@ -210,7 +435,7 @@ that plague C++-style multiple inheritance.</p>
 <p>Abstract traits can be used like Java interfaces. This is just what we need to
 write a generic interface for Stacks:</p>
 
-<div><script src='https://gist.github.com/1709179.js?file='></script>
+<div><script src='https://gist.github.com/1709179.js'></script>
 <noscript><pre><code>trait Stack[+T] {
   def isEmpty : Boolean
 
@@ -273,7 +498,7 @@ Stack[Int] and get out a Stack[Any].</p>
 storage for the Stack. It also uses Scala&#8217;s <em>companion object</em> feature to
 provide a static factory method for creating new ListStacks.</p>
 
-<div><script src='https://gist.github.com/1709271.js?file='></script>
+<div><script src='https://gist.github.com/1709271.js'></script>
 <noscript><pre><code>object ListStack {
   def apply[T] : ListStack[T] = new ListStack[T](List())
 }
@@ -294,7 +519,7 @@ class ListStack[T] private (val l: List[T]) extends Stack[T] {
 same idea as the first one, except we use a set of case classes to match on
 instead of just wrapping List&#8217;s functions.</p>
 
-<div><script src='https://gist.github.com/1709288.js?file='></script>
+<div><script src='https://gist.github.com/1709288.js'></script>
 <noscript><pre><code>sealed abstract class LIST[+T]
 case object NIL extends LIST[Nothing]
 final case class CONS[T](head: T, tail: LIST[T]) extends LIST[T]
@@ -342,7 +567,7 @@ the mess of having to match on each of the cases of the custom List every time
 it&#8217;s necessary to operate on the data. I think it produces the most compact
 and readable code out of all three implementations.</p>
 
-<div><script src='https://gist.github.com/1709315.js?file='></script>
+<div><script src='https://gist.github.com/1709315.js'></script>
 <noscript><pre><code>sealed abstract class CustomStack[+T] extends Stack[T]
 case object EmptyCustomStack extends CustomStack[Nothing] {
   def isEmpty = true
@@ -384,7 +609,7 @@ but must copy all of the nodes in the first list just to modify the last one.</p
 <p>In Scala, the function catenate on the built-in list type looks like the
 following:</p>
 
-<div><script src='https://gist.github.com/1692508.js?file='></script>
+<div><script src='https://gist.github.com/1692508.js'></script>
 <noscript><pre><code>def catenate[A](xs: List[A], ys: List[A]) : List[A] = xs match {
   case Nil =&gt; ys
   case x::xs =&gt; x :: (catenate(xs, ys))
@@ -396,7 +621,7 @@ elements in the list up to the element to be updated, and then we can point the
 tail of the element we updated to the pre-existing tail of the old element,
 thus sharing as much data as possible.</p>
 
-<div><script src='https://gist.github.com/1692539.js?file='></script>
+<div><script src='https://gist.github.com/1692539.js'></script>
 <noscript><pre><code>def update[A](xs: List[A], i: Int, y: A) : List[A] = (xs, i) match {
   case (Nil, _) =&gt; throw new AssertionError(&quot;Invalid subscript&quot;)
   case (x::xs, 0) =&gt; y::xs
@@ -417,7 +642,7 @@ is O(n) in time, as we are performing one cons operation for each element in the
 input list, and O(n) in space, as we&#8217;re saving one cons cell per cons cell in
 the input list.</p>
 
-<div><script src='https://gist.github.com/1692330.js?file='></script>
+<div><script src='https://gist.github.com/1692330.js'></script>
 <noscript><pre><code>def suffixes[A](xs: List[A]): List[List[A]] = xs match {
   case Nil =&gt; Nil::Nil
   case x::xs =&gt; (x::xs)::suffixes(xs)</code></pre></noscript></div>

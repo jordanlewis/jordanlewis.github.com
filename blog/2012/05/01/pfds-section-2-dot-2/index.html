@@ -125,7 +125,7 @@ the generic stack trait implementation that I wrote about
 <a href="/blog/2012/01/31/abstract-generic-collections-section-2-dot-1-redux/">last time</a>
 , it&#8217;s easy to create this interface as a generic trait in Scala.</p>
 
-<div><script src='https://gist.github.com/2565386.js?file='></script>
+<div><script src='https://gist.github.com/2565386.js'></script>
 <noscript><pre><code>trait Set[T] {
   def insert(x: T): Set[T]
   def member(x: T): Boolean
@@ -145,7 +145,7 @@ I wrote a simple binary tree data type using case classes. This allowed me to
 use Scala&#8217;s pattern matching feature in my implementation of the binary search
 tree.</p>
 
-<div><script src='https://gist.github.com/2573618.js?file='></script>
+<div><script src='https://gist.github.com/2573618.js'></script>
 <noscript><pre><code>sealed abstract class BinaryTree[+T]
 case object BinaryTreeLeaf extends BinaryTree[Nothing]
 final case class BinaryTreeNode[T](left: BinaryTree[T], value: T, right: BinaryTree[T]) extends BinaryTree[T]</code></pre></noscript></div>
@@ -233,7 +233,7 @@ trait uses the utility object as its underlying implementation. I used Scala&#82
 
 <p>Here&#8217;s the companion object that contains the underlying implementation logic:</p>
 
-<div><script src='https://gist.github.com/2573799.js?file='></script>
+<div><script src='https://gist.github.com/2573799.js'></script>
 <noscript><pre><code>object UnbalancedTreeSet {
   private def insert[T](x: T, t: BinaryTree[T])(implicit ordering: Ordering[T]): BinaryTree[T] = t match {
     case BinaryTreeLeaf =&gt; BinaryTreeNode(BinaryTreeLeaf, x, BinaryTreeLeaf)
@@ -255,7 +255,7 @@ trait uses the utility object as its underlying implementation. I used Scala&#82
 <p>And here&#8217;s the class that actually implements the Set interface using the
 companion object:</p>
 
-<div><script src='https://gist.github.com/2573976.js?file='></script>
+<div><script src='https://gist.github.com/2573976.js'></script>
 <noscript><pre><code>class UnbalancedTreeSet[T] private (tree: BinaryTree[T]) (implicit val ordering: Ordering[T])
   extends Set[T] {
 
@@ -315,6 +315,8 @@ solutions for section 2.2&#8217;s exercises.</p>
       
         <a class="basic-alignment left" href="/blog/2012/01/31/abstract-generic-collections-section-2-dot-1-redux/" title="Previous Post: Abstract Generic Collections: PFDS Section 2.1 Redux">&laquo; Abstract Generic Collections: PFDS Section 2.1 Redux</a>
       
+      
+        <a class="basic-alignment right" href="/blog/2012/12/04/pfds-section-2-dot-2-exercises/" title="Next Post: Exercises from PFDS Section 2.2">Exercises from PFDS Section 2.2 &raquo;</a>
       
     </p>
   </footer>

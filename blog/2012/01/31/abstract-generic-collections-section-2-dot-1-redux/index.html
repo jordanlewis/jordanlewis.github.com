@@ -132,7 +132,7 @@ that plague C++-style multiple inheritance.</p>
 <p>Abstract traits can be used like Java interfaces. This is just what we need to
 write a generic interface for Stacks:</p>
 
-<div><script src='https://gist.github.com/1709179.js?file='></script>
+<div><script src='https://gist.github.com/1709179.js'></script>
 <noscript><pre><code>trait Stack[+T] {
   def isEmpty : Boolean
 
@@ -195,7 +195,7 @@ Stack[Int] and get out a Stack[Any].</p>
 storage for the Stack. It also uses Scala&#8217;s <em>companion object</em> feature to
 provide a static factory method for creating new ListStacks.</p>
 
-<div><script src='https://gist.github.com/1709271.js?file='></script>
+<div><script src='https://gist.github.com/1709271.js'></script>
 <noscript><pre><code>object ListStack {
   def apply[T] : ListStack[T] = new ListStack[T](List())
 }
@@ -216,7 +216,7 @@ class ListStack[T] private (val l: List[T]) extends Stack[T] {
 same idea as the first one, except we use a set of case classes to match on
 instead of just wrapping List&#8217;s functions.</p>
 
-<div><script src='https://gist.github.com/1709288.js?file='></script>
+<div><script src='https://gist.github.com/1709288.js'></script>
 <noscript><pre><code>sealed abstract class LIST[+T]
 case object NIL extends LIST[Nothing]
 final case class CONS[T](head: T, tail: LIST[T]) extends LIST[T]
@@ -264,7 +264,7 @@ the mess of having to match on each of the cases of the custom List every time
 it&#8217;s necessary to operate on the data. I think it produces the most compact
 and readable code out of all three implementations.</p>
 
-<div><script src='https://gist.github.com/1709315.js?file='></script>
+<div><script src='https://gist.github.com/1709315.js'></script>
 <noscript><pre><code>sealed abstract class CustomStack[+T] extends Stack[T]
 case object EmptyCustomStack extends CustomStack[Nothing] {
   def isEmpty = true
