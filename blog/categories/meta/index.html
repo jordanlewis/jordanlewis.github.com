@@ -117,24 +117,14 @@
 <aside class="sidebar">
   
     <section>
-  <h1>Hi, I'm <a href="about">Jordan Lewis</a>.</h1>
+  <h1>Hi, I'm <a href="/about">Jordan Lewis</a>.</h1>
   <p>I work at <a href="http://knewton.com">Knewton</a> and live in Brooklyn, New York.</p>
 </section>
 
 <section>
   <h1><a href="http://twitter.com/JordanALewis">I tweet</a>.</h1>
-  <ul id="tweets">
-    <li class="loading">Status updating...</li>
-  </ul>
-  <script type="text/javascript">
-    $.domReady(function(){
-      getTwitterFeed("JordanALewis", 4, false);
-    });
-  </script>
-  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
-  
-    <a href="http://twitter.com/JordanALewis" class="twitter-follow-button" data-show-count="false">Follow @JordanALewis</a>
-  
+  <a class="twitter-timeline" href="https://twitter.com/JordanALewis" data-widget-id="428578347942019073">Tweets by @JordanALewis</a>
+  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 </section>
 
 <section class="lastfm">
@@ -215,7 +205,7 @@ function showLastfmFeed(xml){
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2012 - Jordan Lewis -
+  Copyright &copy; 2014 - Jordan Lewis -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
