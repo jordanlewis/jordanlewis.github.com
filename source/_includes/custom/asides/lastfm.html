@@ -48,9 +48,9 @@ function showLastfmFeed(xml){
   $(xml.responseXML).find("recenttracks").children().each(function(){
     var artist = $(this).find('artist').text(),
         name = $(this).find('name').text(),
-        date = $(this).find('date').text(),
+        date = $(this).find('date').attr("uts"),
         url = $(this).find('url').text();
-    content += '<li id="lastfmItem_'+i+'"><a href="'+ url + '">' + name +'</a> by '+ artist + '<span class="date"> ' + prettyDate(date['uts']) + ' ago</span></li>';
+    content += '<li id="lastfmItem_'+i+'"><a href="'+ url + '">' + name +'</a> by '+ artist + '<span class="date"> ' + prettyDate(date) + ' ago</span></li>';
     i+=1;
   });
 
