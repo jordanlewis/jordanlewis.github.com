@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: scala | Jordan Lewis]]></title>
-  <link href="http://jordanlewis.org/blog/categories/scala/atom.xml" rel="self"/>
-  <link href="http://jordanlewis.org/"/>
-  <updated>2014-01-29T12:41:31-05:00</updated>
-  <id>http://jordanlewis.org/</id>
+  <link href="http://jordanlewis.github.com/blog/categories/scala/atom.xml" rel="self"/>
+  <link href="http://jordanlewis.github.com/"/>
+  <updated>2016-09-26T13:53:03-04:00</updated>
+  <id>http://jordanlewis.github.com/</id>
   <author>
     <name><![CDATA[Jordan Lewis]]></name>
     <email><![CDATA[jordanthelewis@gmail.com]]></email>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[Exercises from PFDS Section 2.2]]></title>
-    <link href="http://jordanlewis.org/blog/2012/12/04/pfds-section-2-dot-2-exercises/"/>
+    <link href="http://jordanlewis.github.com/blog/2012/12/04/pfds-section-2-dot-2-exercises/"/>
     <updated>2012-12-04T18:48:00-05:00</updated>
-    <id>http://jordanlewis.org/blog/2012/12/04/pfds-section-2-dot-2-exercises</id>
+    <id>http://jordanlewis.github.com/blog/2012/12/04/pfds-section-2-dot-2-exercises</id>
     <content type="html"><![CDATA[<p>Section 2.2's exercises define some optimizations to the section's unbalanced
 tree set implementation.</p>
 
@@ -40,23 +40,7 @@ number of nodes in the shortest path from the root to a leaf. The implementation
 is relatively straightforward:</p>
 
 <p><div><script src='https://gist.github.com/4206836.js'></script>
-<noscript><pre><code>class UnbalancedTreeSet[T] private (tree: BinaryTree[T]) (implicit val ordering: Ordering[T]) extends Set[T] {
-  // ...
-  def member(x: T) = UnbalancedTreeSet.member(x, tree, None)
-  // ...
-}
-
-object UnbalancedTreeSet {
-  // ...
-  private def member[T](x: T, t: BinaryTree[T], c: Option[T])(implicit ordering: Ordering[T]): Boolean = (t, c) match {
-    case (BinaryTreeLeaf, None) =&gt; false
-    case (BinaryTreeLeaf, Some(d)) =&gt; ordering.equiv(x, d)
-    case (BinaryTreeNode(a, y, b), _) =&gt;
-      if (ordering.lt(x, y)) member(x, a, c)
-      else member(x, b, Some(y))
-  }
-  // ...
-}  </code></pre></noscript></div>
+<noscript><pre><code></code></pre></noscript></div>
 </p>
 
 <p>We introduce a new parameter to <code>member</code>, <code>c: Option[T]</code>, which is <code>None</code> when
@@ -80,29 +64,7 @@ catch the exception in the helper <code>insert</code> method of the UnbalancedTr
 class.</p>
 
 <p><div><script src='https://gist.github.com/4206895.js'></script>
-<noscript><pre><code>class ElementAlreadyExistsException extends RuntimeException
-
-class UnbalancedTreeSet[T] private (tree: BinaryTree[T]) (implicit val ordering: Ordering[T]) extends Set[T] {
-  // ...
-  def insert(x: T) = try {
-    newSet(UnbalancedTreeSet.insert(x, tree))
-  } catch {
-    case _:ElementAlreadyExistsException =&gt; this
-  }
-  // ...
-}
- 
-object UnbalancedTreeSet {
-  // ...
-  private def insert[T](x: T, t: BinaryTree[T])(implicit ordering: Ordering[T]): BinaryTree[T] = t match {
-    case BinaryTreeLeaf =&gt; BinaryTreeNode(BinaryTreeLeaf, x, BinaryTreeLeaf)
-    case BinaryTreeNode(a, y, b) =&gt;
-      if (ordering.lt(x, y)) BinaryTreeNode(insert(x, a), y, b)
-      else if (ordering.lt(y, x)) BinaryTreeNode(a, y, insert(x, b))
-      else throw new ElementAlreadyExistsException
-  }
-  // ...
-}</code></pre></noscript></div>
+<noscript><pre><code></code></pre></noscript></div>
 </p>
 
 <h2>Exercise 2.4</h2>
@@ -115,32 +77,7 @@ performs no unnecessary path copying if inserting a pre-existing element, and
 performs at most <code>d + 1</code> comparisons along the way.</p>
 
 <p><div><script src='https://gist.github.com/4207683.js'></script>
-<noscript><pre><code>class ElementAlreadyExistsException extends RuntimeException
-
-class UnbalancedTreeSet[T] private (tree: BinaryTree[T]) (implicit val ordering: Ordering[T]) extends Set[T] {
-  // ...
-  def insert(x: T) = try {
-    newSet(UnbalancedTreeSet.insert(x, tree, None))
-  } catch {
-    case _:ElementAlreadyExistsException =&gt; this
-  }
-  // ...
-}
- 
-object UnbalancedTreeSet {
-  // ...
-  private def insert[T](x: T, t: BinaryTree[T], c: Option[T])(implicit ordering: Ordering[T]): BinaryTree[T] =
-  (t, c) match {
-    case (BinaryTreeLeaf, None) =&gt; BinaryTreeNode(BinaryTreeLeaf, x, BinaryTreeLeaf)
-    case (BinaryTreeLeaf, Some(d)) =&gt;
-      if (ordering.equiv(x, d)) throw new ElementAlreadyExistsException
-      else BinaryTreeNode(BinaryTreeLeaf, x, BinaryTreeLeaf)
-    case (BinaryTreeNode(a, y, b), _) =&gt;
-      if (ordering.lt(x, y)) BinaryTreeNode(insert(x, a, c), y, b)
-      else BinaryTreeNode(a, y, insert(x, b, Some(y)))
-  }
-  // ...
-}</code></pre></noscript></div>
+<noscript><pre><code></code></pre></noscript></div>
 </p>
 
 <h2>Exercise 2.5</h2>
@@ -166,27 +103,7 @@ this is idiomatic, but it's not really clear to me: there are so many different
 ways to do things in Scala.</p>
 
 <p><div><script src='https://gist.github.com/4210143.js'></script>
-<noscript><pre><code>object BinaryTree {
-  def complete[T](x: T, d: Int): BinaryTree[T] = d match {
-    case 0 =&gt; BinaryTreeLeaf
-    case _ =&gt; {
-      val subtree = complete(x, d - 1)
-      BinaryTreeNode(subtree, x, subtree)
-    }
-  }
-
-  def balanced[T](x: T, d: Int)(implicit ordering: Ordering[T]): BinaryTree[T] = d match {
-    case 0 =&gt; BinaryTreeLeaf
-    case 1 =&gt; BinaryTreeNode(BinaryTreeLeaf, x, BinaryTreeLeaf)
-    case _ =&gt; {
-      val half = d / 2
-      val halftree = create(x, half)
-      if (half * 2 == d) BinaryTreeNode(halftree, x, create(x, half - 1))
-      else BinaryTreeNode(halftree, x, halftree)
-    }
-  }
-}
-</code></pre></noscript></div>
+<noscript><pre><code></code></pre></noscript></div>
 </p>
 
 <p>I wrote a few tests for the tree generation functions in a normal
@@ -206,22 +123,7 @@ generator. Writing tests in this way is concise and fun. Here's what they ended
 up looking like:</p>
 
 <p><div><script src='https://gist.github.com/4210365.js'></script>
-<noscript><pre><code>class BinaryTreeTest extends Spec with ShouldMatchers with Checkers {
-  describe(&quot;A complete tree&quot;) {
-    it(&quot;should have 2^n - 1 nodes&quot;) {
-      check(forAll(choose(0, 25)){n: Int =&gt;
-          BinaryTree.complete(0, n).size == scala.math.pow(2, n) - 1 })
-    }
-  }
-
-  describe(&quot;A balanced tree&quot;) {
-    it(&quot;should have n nodes&quot;) {
-      check(forAll(choose(0, 100)){n: Int =&gt;
-          BinaryTree.balanced(0, n).size == n})
-    }
-  }
-}
-</code></pre></noscript></div>
+<noscript><pre><code></code></pre></noscript></div>
 </p>
 
 <h2>Exercise 2.6</h2>
@@ -240,9 +142,9 @@ change <code>insert</code> to <code>bind</code>, give it an extra value argument
   
   <entry>
     <title type="html"><![CDATA[PFDS Section 2.2]]></title>
-    <link href="http://jordanlewis.org/blog/2012/05/01/pfds-section-2-dot-2/"/>
+    <link href="http://jordanlewis.github.com/blog/2012/05/01/pfds-section-2-dot-2/"/>
     <updated>2012-05-01T16:33:00-04:00</updated>
-    <id>http://jordanlewis.org/blog/2012/05/01/pfds-section-2-dot-2</id>
+    <id>http://jordanlewis.github.com/blog/2012/05/01/pfds-section-2-dot-2</id>
     <content type="html"><![CDATA[<p>Section 2.2 presents immutable sets implemented with unbalanced binary search
 trees, a slightly more complex example of immutable data sharing than the list
 example in <a href="/blog/2012/01/27/chapter-1-dot-1/">Section 2.1</a>. My
@@ -260,10 +162,7 @@ the generic stack trait implementation that I wrote about
 , it's easy to create this interface as a generic trait in Scala.</p>
 
 <p><div><script src='https://gist.github.com/2565386.js'></script>
-<noscript><pre><code>trait Set[T] {
-  def insert(x: T): Set[T]
-  def member(x: T): Boolean
-}</code></pre></noscript></div>
+<noscript><pre><code></code></pre></noscript></div>
 </p>
 
 <h2>Unbalanced binary search trees</h2>
@@ -280,9 +179,7 @@ use Scala's pattern matching feature in my implementation of the binary search
 tree.</p>
 
 <p><div><script src='https://gist.github.com/2573618.js'></script>
-<noscript><pre><code>sealed abstract class BinaryTree[+T]
-case object BinaryTreeLeaf extends BinaryTree[Nothing]
-final case class BinaryTreeNode[T](left: BinaryTree[T], value: T, right: BinaryTree[T]) extends BinaryTree[T]</code></pre></noscript></div>
+<noscript><pre><code></code></pre></noscript></div>
 </p>
 
 <p>Binary search trees rely on the ordering of the type of element that they're
@@ -368,37 +265,14 @@ trait uses the utility object as its underlying implementation. I used Scala's
 <p>Here's the companion object that contains the underlying implementation logic:</p>
 
 <p><div><script src='https://gist.github.com/2573799.js'></script>
-<noscript><pre><code>object UnbalancedTreeSet {
-  private def insert[T](x: T, t: BinaryTree[T])(implicit ordering: Ordering[T]): BinaryTree[T] = t match {
-    case BinaryTreeLeaf =&gt; BinaryTreeNode(BinaryTreeLeaf, x, BinaryTreeLeaf)
-    case tn @ BinaryTreeNode(a, y, b) =&gt;
-      if (ordering.lt(x, y)) BinaryTreeNode(insert(x, a), y, b)
-      else if (ordering.lt(y, x)) BinaryTreeNode(a, y, insert(x, b))
-      else tn
-  }
-  private def member[T](x: T, t: BinaryTree[T])(implicit ordering: Ordering[T]): Boolean = (x, t) match {
-    case (_, BinaryTreeLeaf) =&gt; false
-    case (_, BinaryTreeNode(a, y, b)) =&gt;
-      if (ordering.lt(x, y)) member(x, a)
-      else if (ordering.lt(y, x)) member(x, b)
-      else true
-  }
-}</code></pre></noscript></div>
+<noscript><pre><code></code></pre></noscript></div>
 </p>
 
 <p>And here's the class that actually implements the Set interface using the
 companion object:</p>
 
 <p><div><script src='https://gist.github.com/2573976.js'></script>
-<noscript><pre><code>class UnbalancedTreeSet[T] private (tree: BinaryTree[T]) (implicit val ordering: Ordering[T])
-  extends Set[T] {
-
-  def this()(implicit ordering : Ordering[T]) = this(BinaryTreeLeaf)(ordering)
-  private def newSet(tree: BinaryTree[T]) = new UnbalancedTreeSet[T](tree);
-
-  def insert(x: T) = newSet(UnbalancedTreeSet.insert(x, tree))
-  def member(x: T) = UnbalancedTreeSet.member(x, tree)
-}</code></pre></noscript></div>
+<noscript><pre><code></code></pre></noscript></div>
 </p>
 
 <p>You can see the code in its entirety, as well as a small unit test, on
@@ -409,9 +283,9 @@ solutions for section 2.2's exercises.</p>
   
   <entry>
     <title type="html"><![CDATA[Abstract Generic Collections: PFDS Section 2.1 Redux]]></title>
-    <link href="http://jordanlewis.org/blog/2012/01/31/abstract-generic-collections-section-2-dot-1-redux/"/>
+    <link href="http://jordanlewis.github.com/blog/2012/01/31/abstract-generic-collections-section-2-dot-1-redux/"/>
     <updated>2012-01-31T00:34:00-05:00</updated>
-    <id>http://jordanlewis.org/blog/2012/01/31/abstract-generic-collections-section-2-dot-1-redux</id>
+    <id>http://jordanlewis.github.com/blog/2012/01/31/abstract-generic-collections-section-2-dot-1-redux</id>
     <content type="html"><![CDATA[<p>At the end of my last post, I mentioned that I ended up reusing Scala's build-in
 List collection to implement the exercises instead of writing a generic abstract
 Stack and sample implementations of those. Since then, I've spent some time
@@ -436,14 +310,7 @@ that plague C++-style multiple inheritance.</p>
 write a generic interface for Stacks:</p>
 
 <p><div><script src='https://gist.github.com/1709179.js'></script>
-<noscript><pre><code>trait Stack[+T] {
-  def isEmpty : Boolean
-
-  def cons[U &gt;: T](x: U) : Stack[U]
-  def head : T
-  def tail : Stack[T]
-}
-</code></pre></noscript></div>
+<noscript><pre><code></code></pre></noscript></div>
 </p>
 
 <p>For those of you unfamiliar with Scala, this is similar to a Java interface or
@@ -499,18 +366,7 @@ storage for the Stack. It also uses Scala's <em>companion object</em> feature to
 provide a static factory method for creating new ListStacks.</p>
 
 <p><div><script src='https://gist.github.com/1709271.js'></script>
-<noscript><pre><code>object ListStack {
-  def apply[T] : ListStack[T] = new ListStack[T](List())
-}
-
-class ListStack[T] private (val l: List[T]) extends Stack[T] {
-  def isEmpty = l.isEmpty
-
-  def cons[U &gt;: T](x: U) = new ListStack(x::l)
-  def head = l.head
-  def tail = new ListStack(l.tail)
-}
-</code></pre></noscript></div>
+<noscript><pre><code></code></pre></noscript></div>
 </p>
 
 <h2>Implementation 2: Using a custom List case class as the backing store</h2>
@@ -520,31 +376,7 @@ same idea as the first one, except we use a set of case classes to match on
 instead of just wrapping List's functions.</p>
 
 <p><div><script src='https://gist.github.com/1709288.js'></script>
-<noscript><pre><code>sealed abstract class LIST[+T]
-case object NIL extends LIST[Nothing]
-final case class CONS[T](head: T, tail: LIST[T]) extends LIST[T]
-
-object CustomListStack {
-  def apply[T] = new CustomListStack[T](NIL)
-}
-
-class CustomListStack[T] private (private val l: LIST[T]) extends Stack[T] {
-  def isEmpty = l match {
-    case NIL =&gt; true
-    case CONS(_, _) =&gt; false
-  }
-
-  def cons[U &gt;: T](x: U) = new CustomListStack[U](new CONS[U](x, l))
-  def head = l match {
-    case NIL =&gt; throw new IllegalArgumentException(&quot;Fail&quot;)
-    case CONS(x, _) =&gt; x
-  }
-
-  def tail = l match {
-    case NIL =&gt; throw new IllegalArgumentException(&quot;Fail&quot;)
-    case CONS(_, x) =&gt; new CustomListStack[T](x)
-  }
-}</code></pre></noscript></div>
+<noscript><pre><code></code></pre></noscript></div>
 </p>
 
 <p>This shows off Scala's case classes a little bit: they're just like datatypes
@@ -568,18 +400,7 @@ it's necessary to operate on the data. I think it produces the most compact
 and readable code out of all three implementations.</p>
 
 <p><div><script src='https://gist.github.com/1709315.js'></script>
-<noscript><pre><code>sealed abstract class CustomStack[+T] extends Stack[T]
-case object EmptyCustomStack extends CustomStack[Nothing] {
-  def isEmpty = true
-  def cons[T](x: T) = new NonEmptyCustomStack[T](x, EmptyCustomStack)
-  def head = throw new IllegalArgumentException(&quot;Can't take head of an empty list&quot;)
-  def tail = throw new IllegalArgumentException(&quot;Can't take head of an empty list&quot;)
-}
-final case class NonEmptyCustomStack[+T](head: T, tail: CustomStack[T]) extends CustomStack[T] {
-  def isEmpty = false
-  def cons[U &gt;: T](x: U) = new NonEmptyCustomStack[U](x, this)
-}
-</code></pre></noscript></div>
+<noscript><pre><code></code></pre></noscript></div>
 </p>
 
 <h2>Conclusion</h2>
@@ -595,9 +416,9 @@ of Scala's type system that I gathered by writing this post.</p>
   
   <entry>
     <title type="html"><![CDATA[PFDS Section 2.1]]></title>
-    <link href="http://jordanlewis.org/blog/2012/01/27/chapter-1-dot-1/"/>
+    <link href="http://jordanlewis.github.com/blog/2012/01/27/chapter-1-dot-1/"/>
     <updated>2012-01-27T22:09:00-05:00</updated>
-    <id>http://jordanlewis.org/blog/2012/01/27/chapter-1-dot-1</id>
+    <id>http://jordanlewis.github.com/blog/2012/01/27/chapter-1-dot-1</id>
     <content type="html"><![CDATA[<p>This is the inaugural post of the PFDS series.</p>
 
 <p>Section 2.1 discusses the ramifications of implementing lists and stacks in a
@@ -610,10 +431,7 @@ but must copy all of the nodes in the first list just to modify the last one.</p
 following:</p>
 
 <p><div><script src='https://gist.github.com/1692508.js'></script>
-<noscript><pre><code>def catenate[A](xs: List[A], ys: List[A]) : List[A] = xs match {
-  case Nil =&gt; ys
-  case x::xs =&gt; x :: (catenate(xs, ys))
- }</code></pre></noscript></div>
+<noscript><pre><code></code></pre></noscript></div>
 </p>
 
 <p>Updating a single element of the list is similar. We have to copy all of the
@@ -622,11 +440,7 @@ tail of the element we updated to the pre-existing tail of the old element,
 thus sharing as much data as possible.</p>
 
 <p><div><script src='https://gist.github.com/1692539.js'></script>
-<noscript><pre><code>def update[A](xs: List[A], i: Int, y: A) : List[A] = (xs, i) match {
-  case (Nil, _) =&gt; throw new AssertionError(&quot;Invalid subscript&quot;)
-  case (x::xs, 0) =&gt; y::xs
-  case (x::xs, i) =&gt; x::update(xs, i - 1, y)
-}</code></pre></noscript></div>
+<noscript><pre><code></code></pre></noscript></div>
 </p>
 
 <h3>Exercise 2.1</h3>
@@ -643,9 +457,7 @@ input list, and O(n) in space, as we're saving one cons cell per cons cell in
 the input list.</p>
 
 <p><div><script src='https://gist.github.com/1692330.js'></script>
-<noscript><pre><code>def suffixes[A](xs: List[A]): List[List[A]] = xs match {
-  case Nil =&gt; Nil::Nil
-  case x::xs =&gt; (x::xs)::suffixes(xs)</code></pre></noscript></div>
+<noscript><pre><code></code></pre></noscript></div>
 </p>
 
 <p>This was a pretty simple section, serving mainly as a refresher course in
@@ -663,14 +475,14 @@ I've learned a little bit more about Scala's type system.</p>
   
   <entry>
     <title type="html"><![CDATA[Notes on Purely Functional Data Structures]]></title>
-    <link href="http://jordanlewis.org/blog/2012/01/03/notes-on-purely-functional-data-structures/"/>
+    <link href="http://jordanlewis.github.com/blog/2012/01/03/notes-on-purely-functional-data-structures/"/>
     <updated>2012-01-03T01:24:00-05:00</updated>
-    <id>http://jordanlewis.org/blog/2012/01/03/notes-on-purely-functional-data-structures</id>
+    <id>http://jordanlewis.github.com/blog/2012/01/03/notes-on-purely-functional-data-structures</id>
     <content type="html"><![CDATA[<p>I heard a lot of good things about Mike Okasaki's <a href="http://www.amazon.com/gp/product/0521663504/ref=as_li_qf_sp_asin_tl?ie=UTF8&tag=jordanlewisor-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=0521663504">Purely Functional Data Structures</a><img src="http://www.assoc-amazon.com/e/ir?t=jordanlewisor-20&l=as2&o=1&a=0521663504" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /> at UChicago, but didn't ever take the time to check it out. Lately I've missed the heady joy of reading and writing code in a strongly typed functional programming language like Standard ML, so when one of my coworkers at Knewton mentioned he was going to read the book I decided to get a copy for myself.</p>
 
 <p>I'm going to try to read through the whole book and complete as many of the exercises that I can. To help myself keep the commitment, I'm going to follow in Eli Bendersky's footsteps and post reading notes and exercise solutions along the way, as <a href="http://eli.thegreenplace.net/2007/06/19/introducing-the-sicp-reading-notes/">he did for SICP</a>.</p>
 
-<p>The notes will be categorized under <a href="http://jordanlewis.org/blog/categories/pfds/">pfds</a>.</p>
+<p>The notes will be categorized under <a href="http://jordanlewis.github.com/blog/categories/pfds/">pfds</a>.</p>
 
 <p>Also, I've recently begun to learn Scala, a strongly typed functional language on the JVM with nice features such as algebraic datatypes in the form of case classes, pattern matching, and lazy values. Given the usefulness of these language amenities for exploration of Okasaki's concepts, I'm going to do the exercises in Scala instead of Standard ML or Haskell.</p>
 ]]></content>

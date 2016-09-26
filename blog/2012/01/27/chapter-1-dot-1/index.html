@@ -19,7 +19,7 @@ functional and immutable &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://jordanlewis.org/blog/2012/01/27/chapter-1-dot-1/">
+  <link rel="canonical" href="http://jordanlewis.github.com/blog/2012/01/27/chapter-1-dot-1/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -67,7 +67,7 @@ functional and immutable &hellip;">
   
 <form action="http://google.com/search" method="get">
   <fieldset role="search">
-    <input type="hidden" name="q" value="site:jordanlewis.org" />
+    <input type="hidden" name="q" value="site:jordanlewis.github.com" />
     <input class="search" type="text" name="q" results="0" placeholder="Search"/>
   </fieldset>
 </form>
@@ -121,10 +121,7 @@ but must copy all of the nodes in the first list just to modify the last one.</p
 following:</p>
 
 <div><script src='https://gist.github.com/1692508.js'></script>
-<noscript><pre><code>def catenate[A](xs: List[A], ys: List[A]) : List[A] = xs match {
-  case Nil =&gt; ys
-  case x::xs =&gt; x :: (catenate(xs, ys))
- }</code></pre></noscript></div>
+<noscript><pre><code></code></pre></noscript></div>
 
 
 <p>Updating a single element of the list is similar. We have to copy all of the
@@ -133,11 +130,7 @@ tail of the element we updated to the pre-existing tail of the old element,
 thus sharing as much data as possible.</p>
 
 <div><script src='https://gist.github.com/1692539.js'></script>
-<noscript><pre><code>def update[A](xs: List[A], i: Int, y: A) : List[A] = (xs, i) match {
-  case (Nil, _) =&gt; throw new AssertionError(&quot;Invalid subscript&quot;)
-  case (x::xs, 0) =&gt; y::xs
-  case (x::xs, i) =&gt; x::update(xs, i - 1, y)
-}</code></pre></noscript></div>
+<noscript><pre><code></code></pre></noscript></div>
 
 
 <h3>Exercise 2.1</h3>
@@ -154,9 +147,7 @@ input list, and O(n) in space, as we&#8217;re saving one cons cell per cons cell
 the input list.</p>
 
 <div><script src='https://gist.github.com/1692330.js'></script>
-<noscript><pre><code>def suffixes[A](xs: List[A]): List[List[A]] = xs match {
-  case Nil =&gt; Nil::Nil
-  case x::xs =&gt; (x::xs)::suffixes(xs)</code></pre></noscript></div>
+<noscript><pre><code></code></pre></noscript></div>
 
 
 <p>This was a pretty simple section, serving mainly as a refresher course in
@@ -233,7 +224,7 @@ I&#8217;ve learned a little bit more about Scala&#8217;s type system.</p>
   
     <section>
   <h1>Hi, I'm <a href="/about">Jordan Lewis</a>.</h1>
-  <p>I work at <a href="http://knewton.com">Knewton</a> and live in Brooklyn, New York.</p>
+  <p>I work at <a href="http://cockroachlabs.com">Cockroach Labs</a> and live in Brooklyn, New York.</p>
 </section>
 
 <section>
@@ -340,7 +331,7 @@ function showLastfmFeed(xml){
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2014 - Jordan Lewis -
+  Copyright &copy; 2016 - Jordan Lewis -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
@@ -352,8 +343,8 @@ function showLastfmFeed(xml){
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://jordanlewis.org/blog/2012/01/27/chapter-1-dot-1/';
-        var disqus_url = 'http://jordanlewis.org/blog/2012/01/27/chapter-1-dot-1/';
+        var disqus_identifier = 'http://jordanlewis.github.com/blog/2012/01/27/chapter-1-dot-1/';
+        var disqus_url = 'http://jordanlewis.github.com/blog/2012/01/27/chapter-1-dot-1/';
         var disqus_script = 'embed.js';
       
     (function () {

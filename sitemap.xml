@@ -1,43 +1,43 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
-        <loc>http://jordanlewis.org/blog/2012/01/02/hello-world/</loc>
-        <lastmod>2012-11-14T01:00:38-05:00</lastmod>
+        <loc>http://jordanlewis.github.com/blog/2012/01/02/hello-world/</loc>
+        <lastmod>2016-09-26T13:45:44-04:00</lastmod>
     </url>
     <url>
         <loc>
-            http://jordanlewis.org/blog/2012/01/03/notes-on-purely-functional-data-structures/
+            http://jordanlewis.github.com/blog/2012/01/03/notes-on-purely-functional-data-structures/
         </loc>
-        <lastmod>2012-11-14T01:00:38-05:00</lastmod>
+        <lastmod>2016-09-26T13:45:44-04:00</lastmod>
     </url>
     <url>
-        <loc>http://jordanlewis.org/blog/2012/01/27/chapter-1-dot-1/</loc>
-        <lastmod>2012-11-14T01:00:38-05:00</lastmod>
+        <loc>http://jordanlewis.github.com/blog/2012/01/27/chapter-1-dot-1/</loc>
+        <lastmod>2016-09-26T13:45:44-04:00</lastmod>
     </url>
     <url>
         <loc>
-            http://jordanlewis.org/blog/2012/01/31/abstract-generic-collections-section-2-dot-1-redux/
+            http://jordanlewis.github.com/blog/2012/01/31/abstract-generic-collections-section-2-dot-1-redux/
         </loc>
-        <lastmod>2012-11-14T01:00:38-05:00</lastmod>
+        <lastmod>2016-09-26T13:45:44-04:00</lastmod>
     </url>
     <url>
-        <loc>http://jordanlewis.org/blog/2012/05/01/pfds-section-2-dot-2/</loc>
-        <lastmod>2012-11-14T01:00:38-05:00</lastmod>
+        <loc>http://jordanlewis.github.com/blog/2012/05/01/pfds-section-2-dot-2/</loc>
+        <lastmod>2016-09-26T13:45:44-04:00</lastmod>
     </url>
     <url>
-        <loc>http://jordanlewis.org/blog/2012/12/04/pfds-section-2-dot-2-exercises/</loc>
-        <lastmod>2012-12-04T18:50:12-05:00</lastmod>
+        <loc>http://jordanlewis.github.com/blog/2012/12/04/pfds-section-2-dot-2-exercises/</loc>
+        <lastmod>2016-09-26T13:45:44-04:00</lastmod>
     </url>
     <url>
-        <loc>http://jordanlewis.org/about/</loc>
-        <lastmod>2012-11-14T01:00:10-05:00</lastmod>
+        <loc>http://jordanlewis.github.com/about/</loc>
+        <lastmod>2016-09-26T13:45:44-04:00</lastmod>
     </url>
     <url>
-        <loc>http://jordanlewis.org/blog/archives/</loc>
-        <lastmod>2012-12-04T18:50:12-05:00</lastmod>
+        <loc>http://jordanlewis.github.com/blog/archives/</loc>
+        <lastmod>2016-09-26T13:45:44-04:00</lastmod>
     </url>
     <url>
-        <loc>http://jordanlewis.org/</loc>
-        <lastmod>2012-12-04T18:50:12-05:00</lastmod>
+        <loc>http://jordanlewis.github.com/</loc>
+        <lastmod>2016-09-26T13:45:44-04:00</lastmod>
     </url>
 </urlset>
