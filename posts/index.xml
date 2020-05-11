@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on Jordan Lewis</title>
-    <link>http://jordanlewis.org/posts/</link>
+    <link>http://jordanlewis.github.io/posts/</link>
     <description>Recent content in Posts on Jordan Lewis</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 11 May 2020 01:01:18 -0400</lastBuildDate>
     
-	<atom:link href="http://jordanlewis.org/posts/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://jordanlewis.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>We Back</title>
-      <link>http://jordanlewis.org/posts/we-back/</link>
+      <link>http://jordanlewis.github.io/posts/we-back/</link>
       <pubDate>Mon, 11 May 2020 01:01:18 -0400</pubDate>
       
-      <guid>http://jordanlewis.org/posts/we-back/</guid>
+      <guid>http://jordanlewis.github.io/posts/we-back/</guid>
       <description>In a tradition that&amp;rsquo;s as old as time itself, I&amp;rsquo;m writing this blog post to commemorate moving my blog to a new blogging framework, Hugo.
 When I started this blog in 2012, the hotness was Octopress. Now the hotness is Hugo. So, I&amp;rsquo;ve converted my old posts to Hugo and refreshed the theme a little bit.
 Hopefully this won&amp;rsquo;t become the last new post, but you never know.</description>
@@ -24,57 +24,57 @@ Hopefully this won&amp;rsquo;t become the last new post, but you never know.</de
     
     <item>
       <title>Exercises from PFDS Section 2.2</title>
-      <link>http://jordanlewis.org/posts/2012-12-04-pfds-section-2-dot-2-exercises/</link>
+      <link>http://jordanlewis.github.io/posts/2012-12-04-pfds-section-2-dot-2-exercises/</link>
       <pubDate>Tue, 04 Dec 2012 18:48:00 -0400</pubDate>
       
-      <guid>http://jordanlewis.org/posts/2012-12-04-pfds-section-2-dot-2-exercises/</guid>
+      <guid>http://jordanlewis.github.io/posts/2012-12-04-pfds-section-2-dot-2-exercises/</guid>
       <description>Section 2.2&amp;rsquo;s exercises define some optimizations to the section&amp;rsquo;s unbalanced tree set implementation.
 Exercise 2.2 The implementation of member that Okasaki gives for binary search trees in section 2.2 performs 2d comparisons for a tree of depth d in the worst case, when searching for a number that is the farthest to the right on the tree, and when the right path in the tree is of depth d itself. This is because every call of member checks whether x &amp;lt; y and, if not, whether y &amp;lt; x.</description>
     </item>
     
     <item>
       <title>PFDS Section 2.2</title>
-      <link>http://jordanlewis.org/posts/2012-05-01-pfds-section-2-dot-2/</link>
+      <link>http://jordanlewis.github.io/posts/2012-05-01-pfds-section-2-dot-2/</link>
       <pubDate>Tue, 01 May 2012 16:33:00 -0400</pubDate>
       
-      <guid>http://jordanlewis.org/posts/2012-05-01-pfds-section-2-dot-2/</guid>
+      <guid>http://jordanlewis.github.io/posts/2012-05-01-pfds-section-2-dot-2/</guid>
       <description>Section 2.2 presents immutable sets implemented with unbalanced binary search trees, a slightly more complex example of immutable data sharing than the list example in Section 2.1. My first challenge was to reimplement Okasaki&amp;rsquo;s base implementation of unbalanced binary search tree sets using idiomatic Scala. I had to learn a fair amount more about Scala&amp;rsquo;s type system to be able to write such an implementation, so I figured I&amp;rsquo;d write up some of the things I learned about Scala in the process as well as the implementation.</description>
     </item>
     
     <item>
       <title>Abstract Generic Collections: PFDS Section 2.1 Redux</title>
-      <link>http://jordanlewis.org/posts/2012-01-31-abstract-generic-collections-section-2-dot-1-redux/</link>
+      <link>http://jordanlewis.github.io/posts/2012-01-31-abstract-generic-collections-section-2-dot-1-redux/</link>
       <pubDate>Tue, 31 Jan 2012 00:34:00 -0400</pubDate>
       
-      <guid>http://jordanlewis.org/posts/2012-01-31-abstract-generic-collections-section-2-dot-1-redux/</guid>
+      <guid>http://jordanlewis.github.io/posts/2012-01-31-abstract-generic-collections-section-2-dot-1-redux/</guid>
       <description>At the end of my last post, I mentioned that I ended up reusing Scala&amp;rsquo;s build-in List collection to implement the exercises instead of writing a generic abstract Stack and sample implementations of those. Since then, I&amp;rsquo;ve spent some time learning about how to implement generic collections in Scala. I came up with a Stack trait, a la Okasaki&amp;rsquo;s Stack signature, and three implementations: the first two are straightforward translations of the SML structures given in the book, and the third is a more Scala-idiomatic implementation.</description>
     </item>
     
     <item>
       <title>PFDS Section 2.1</title>
-      <link>http://jordanlewis.org/posts/2012-01-27-chapter-1-dot-1/</link>
+      <link>http://jordanlewis.github.io/posts/2012-01-27-chapter-1-dot-1/</link>
       <pubDate>Fri, 27 Jan 2012 22:09:00 -0400</pubDate>
       
-      <guid>http://jordanlewis.org/posts/2012-01-27-chapter-1-dot-1/</guid>
+      <guid>http://jordanlewis.github.io/posts/2012-01-27-chapter-1-dot-1/</guid>
       <description>This is the inaugural post of the PFDS series.
 Section 2.1 discusses the ramifications of implementing lists and stacks in a functional and immutable manner. Using the operation of list catenation as a motivator, Okasaki introduces the idea of data sharing. We see that to catenate two lists, we can share the second list, which doesn&amp;rsquo;t get modified, but must copy all of the nodes in the first list just to modify the last one.</description>
     </item>
     
     <item>
       <title>Notes on Purely Functional Data Structures</title>
-      <link>http://jordanlewis.org/posts/2012-01-03-notes-on-purely-functional-data-structures/</link>
+      <link>http://jordanlewis.github.io/posts/2012-01-03-notes-on-purely-functional-data-structures/</link>
       <pubDate>Tue, 03 Jan 2012 01:24:00 -0400</pubDate>
       
-      <guid>http://jordanlewis.org/posts/2012-01-03-notes-on-purely-functional-data-structures/</guid>
+      <guid>http://jordanlewis.github.io/posts/2012-01-03-notes-on-purely-functional-data-structures/</guid>
       <description>I heard a lot of good things about Mike Okasaki&amp;rsquo;s Purely Functional Data Structures at UChicago, but didn&amp;rsquo;t ever take the time to check it out. Lately I&amp;rsquo;ve missed the heady joy of reading and writing code in a strongly typed functional programming language like Standard ML, so when one of my coworkers at Knewton mentioned he was going to read the book I decided to get a copy for myself.</description>
     </item>
     
     <item>
       <title>Hello World</title>
-      <link>http://jordanlewis.org/posts/2012-01-02-hello-world/</link>
+      <link>http://jordanlewis.github.io/posts/2012-01-02-hello-world/</link>
       <pubDate>Mon, 02 Jan 2012 01:50:00 -0400</pubDate>
       
-      <guid>http://jordanlewis.org/posts/2012-01-02-hello-world/</guid>
+      <guid>http://jordanlewis.github.io/posts/2012-01-02-hello-world/</guid>
       <description>Hi internet! I&amp;rsquo;ve gotten with the program and bloggified my website with the help of the pretty rad Octopress framework. Hope you enjoy it.</description>
     </item>
     
