@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html><head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>PFDS Section 2.2 - Jordan Lewis</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="PFDS Section 2.2" />
+<meta property="og:description" content="Section 2.2 presents immutable sets implemented with unbalanced binary search trees, a slightly more complex example of immutable data sharing than the list example in Section 2.1. My first challenge was to reimplement Okasaki&rsquo;s base implementation of unbalanced binary search tree sets using idiomatic Scala. I had to learn a fair amount more about Scala&rsquo;s type system to be able to write such an implementation, so I figured I&rsquo;d write up some of the things I learned about Scala in the process as well as the implementation." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://jordanlewis.org/posts/2012-05-01-pfds-section-2-dot-2/" />
+<meta property="article:published_time" content="2012-05-01T16:33:00-04:00" />
+<meta property="article:modified_time" content="2012-05-01T16:33:00-04:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="PFDS Section 2.2"/>
+<meta name="twitter:description" content="Section 2.2 presents immutable sets implemented with unbalanced binary search trees, a slightly more complex example of immutable data sharing than the list example in Section 2.1. My first challenge was to reimplement Okasaki&rsquo;s base implementation of unbalanced binary search tree sets using idiomatic Scala. I had to learn a fair amount more about Scala&rsquo;s type system to be able to write such an implementation, so I figured I&rsquo;d write up some of the things I learned about Scala in the process as well as the implementation."/>
+<script src="http://jordanlewis.org/js/feather.min.js"></script>
+	
+	<link href="https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" media="screen" href="http://jordanlewis.org/css/main.css" />
+</head><body>
+        <div class="content"><header>
+	<div class="main">
+		<a href="http://jordanlewis.org/">Jordan Lewis</a>
+	</div>
+	<nav>
+		
+		<a href="/">Home</a>
+		
+		<a href="/posts">Posts</a>
+		
+	</nav>
+</header>
+
+<main>
+	<article>
+		<div class="title">
+			<h1 class="title">PFDS Section 2.2</h1>
+			<div class="meta">Posted on May 1, 2012</div>
+		</div>
+		
+
+		<section class="body"><div>
+      <p>Section 2.2 presents immutable sets implemented with unbalanced binary search
+trees, a slightly more complex example of immutable data sharing than the list
+example in <a href="%7B%7Broot_url%7D%7D/blog/2012/01/27/chapter-1-dot-1/">Section 2.1</a>. My
+first challenge was to reimplement Okasaki&rsquo;s base implementation of unbalanced
+binary search tree sets using idiomatic Scala. I had to learn a fair amount
+more about Scala&rsquo;s type system to be able to write such an implementation, so I
+figured I&rsquo;d write up some of the things I learned about Scala in the process as
+well as the implementation.</p>
+<h2 id="a-generic-trait-for-sets">A generic trait for sets <a href="#a-generic-trait-for-sets" class="hanchor" ariaLabel="Anchor"><i data-feather="link-2"></i></a> </h2>
+<p>Okasaki&rsquo;s set interface contains two methods, <code>insert</code> and <code>member</code>. Similar to
+the generic stack trait implementation that I wrote about
+<a href="%7B%7Broot_url%7D%7D/blog/2012/01/31/abstract-generic-collections-section-2-dot-1-redux/">last time</a>
+, it&rsquo;s easy to create this interface as a generic trait in Scala.</p>
+<script type="application/javascript" src="https://gist.github.com/jordanlewis/2565386.js"></script>
+
+<h2 id="unbalanced-binary-search-trees">Unbalanced binary search trees <a href="#unbalanced-binary-search-trees" class="hanchor" ariaLabel="Anchor"><i data-feather="link-2"></i></a> </h2>
+<p>Unbalanced binary search trees are a great choice for a simple implementation
+of Okasaki&rsquo;s set interface, since <code>insert</code> and <code>member</code> in an unbalanced binary
+search tree both take on average <code>O(log n)</code> time in the number of elements in
+the tree, or <code>O(n)</code> time in the pathological case where each subsequent insert
+is greater than the last.</p>
+<p>I decided to follow Okasaki&rsquo;s functor-like pattern for the implementation, so
+I wrote a simple binary tree data type using case classes. This allowed me to
+use Scala&rsquo;s pattern matching feature in my implementation of the binary search
+tree.</p>
+<script type="application/javascript" src="https://gist.github.com/jordanlewis/2573618.js"></script>
+
+<p>Binary search trees rely on the ordering of the type of element that they&rsquo;re
+storing, so a generic binary search tree implementation similarly must require
+that its type parameter has an order. In Scala, this can be accomplished with
+either of two methods: either by using a <em>view bound</em> on the type parameter to
+require that it be implicitly convertable to an Ordered type, or by requiring
+an instance of Ordering, parameterized on the binary tree&rsquo;s input type, as a
+value parameter.</p>
+<p>In trying to write the most Scala-idiomatic version of the data structure, I
+ended up investigating both methods before deciding on one, since it wasn&rsquo;t
+obvious at first which method would be the simplest. If you&rsquo;re already familiar
+with Scala view bounds and type orderings, or if you just want to get to the
+implementation of the 2.2 data structures already, then you should skip right
+ahead to <a href="#implementation">the implementation</a>.</p>
+<h3 id="view-bounds">View bounds <a href="#view-bounds" class="hanchor" ariaLabel="Anchor"><i data-feather="link-2"></i></a> </h3>
+<p>A view bound is specified by the <code>&lt;%</code> operator. Specifying <code>T &lt;% U</code> in a type
+parameter adds the restriction that the type parameter <code>T</code> must be <em>implicitly
+convertible</em> to <code>U</code>, which is true when there exists a method
+implicit def t2u(t: T): U
+somewhere in the current scope. In our case, we&rsquo;re interested in view bounding
+<code>T</code> by <code>Ordered[T]</code>, which will give us access to the comparison methods (<code>&lt;</code>,
+<code>&gt;</code>, etc) defined on the <code>Ordered[T]</code> type for values of type <code>T</code>.</p>
+<p>For example, to implement a generic less-than function lt that utilizes the
+<code>&lt;</code> method on the input type&rsquo;s <code>Ordered</code> implementation, we write</p>
+<pre><code>def lt[T &lt;% Ordered[T]](x: T, y: T): Boolean = x &lt; y
+</code></pre><p>Without specifying the view bound on <code>T</code>, we would not have access
+to the <code>&lt;</code> method on <code>x</code>, since it is not defined for any arbitrary
+type <code>T</code>.</p>
+<h3 id="ordering-instances">Ordering instances <a href="#ordering-instances" class="hanchor" ariaLabel="Anchor"><i data-feather="link-2"></i></a> </h3>
+<p>The other Scala-idiomatic way to provide or access the ordering of a type <code>T</code>
+is through objects that implement the trait <code>Ordering[T]</code>. An object that
+implements <code>Ordering[T]</code> provides the <code>compare(x: T, y: T)</code> method, which acts
+as the underlying implementation for the trait&rsquo;s other methods, which include
+<code>lt(x: T, y: T)</code>, <code>gt(x: T, y: T)</code>, and the like.</p>
+<p>For example, to implement a generic less-than function lt that utilizes the
+<code>lt</code> method on the input type&rsquo;s <code>Ordering</code>
+implementation, we could write the curried method</p>
+<pre><code>def lt[T](x: T, y: T)(implicit val ordering: Ordering[T]): Boolean = ordering.lt(x, y)
+</code></pre><p>Note that we don&rsquo;t have to specify a type bound on <code>T</code>, but we still ensure
+that <code>T</code> is comparable at the type system level by requiring as an argument an
+ordering object that&rsquo;s parameterized on <code>T</code>. We make the ordering an implicit
+and curried argument, so that if <code>T</code> has an implicit conversion to
+<code>Ordering[T]</code>, as most of Scala&rsquo;s comparable types do, the user doesn&rsquo;t have to
+explicitly pass in the ordering.</p>
+<p>Using instances of <code>Ordering[T]</code> makes your code slightly less pretty, as you
+can no longer write <code>x &lt; y</code>, you have to instead write <code>ordering.lt(x, y)</code>, but
+it makes more explicit what&rsquo;s going on under the hood. It wouldn&rsquo;t necessarily
+be obvious that writing <code>x &lt; y</code> where <code>x</code> and <code>y</code> are instances of type <code>T &lt;% Ordered[T]</code> actually invokes the <code>&lt;</code> method on whatever <code>Ordered[T]</code> object <code>x</code>
+and <code>y</code> are implicitly convertible to. I think I prefer the more explicit
+version using <code>Ordering[T]</code>, but that&rsquo;s probably because using implicit
+conversions at all leaves me with a funny taste in my mouth. It seems to me
+that overusing implicit conversions would lead to a special hell of confusing
+spaghetti code.</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h2 id="scala-implementation-of-unbalanced-binary-tree-sets">Scala implementation of unbalanced binary tree sets <a href="#scala-implementation-of-unbalanced-binary-tree-sets" class="hanchor" ariaLabel="Anchor"><i data-feather="link-2"></i></a> </h2>
+<p>For the implementation, I wrote the actual <code>insert</code> and <code>member</code> logic as
+private methods on a utility object. The class that actually implements the Set
+trait uses the utility object as its underlying implementation. I used Scala&rsquo;s
+<em>companion object</em> idiom to structure the whole thing in an elegant way.</p>
+<p>Here&rsquo;s the companion object that contains the underlying implementation logic:</p>
+<script type="application/javascript" src="https://gist.github.com/jordanlewis/2573799.js"></script>
+
+<p>And here&rsquo;s the class that actually implements the Set interface using the
+companion object:</p>
+<script type="application/javascript" src="https://gist.github.com/jordanlewis/2573976.js"></script>
+
+<p>You can see the code in its entirety, as well as a small unit test, on
+<a href="https://github.com/jordanlewis/PFDScala">GitHub</a>. Next time I&rsquo;ll implement
+solutions for section 2.2&rsquo;s exercises.</p>
+
+    </div></section>
+
+		<div class="post-tags">
+			
+			
+			
+		</div>
+	</article>
+</main>
+<footer>
+<hr><a class="soc" href="https://twitter.com/JordanALewis" title="Twitter"><i data-feather="twitter"></i></a>|<a class="soc" href="https://twitch.tv/large__data__bank" title="Twitch"><i data-feather="twitch"></i></a>|<a class="soc" href="https://github.com/jordanlewis" title="GitHub"><i data-feather="github"></i></a>|<a class="soc" href="https://youtube.com/jordanthelewis" title="YouTube"><i data-feather="youtube"></i></a>|<a class="soc" href="https://instagram.com/jordanthelewis" title="Instagram"><i data-feather="instagram"></i></a><br>
+<br>
+Generated 2020-05-11 | Based on <a href="https://github.com/athul/archie">Archie Theme</a> 
+</footer>
+
+
+<script>
+      feather.replace()
+</script>
+
+</div>
+    </body>
+</html>

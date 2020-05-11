@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on Jordan Lewis</title>
+    <link>http://jordanlewis.org/categories/</link>
+    <description>Recent content in Categories on Jordan Lewis</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 04 Dec 2012 18:48:00 -0400</lastBuildDate>
+    
+	<atom:link href="http://jordanlewis.org/categories/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>pfds scala</title>
+      <link>http://jordanlewis.org/categories/pfds-scala/</link>
+      <pubDate>Tue, 04 Dec 2012 18:48:00 -0400</pubDate>
+      
+      <guid>http://jordanlewis.org/categories/pfds-scala/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>meta</title>
+      <link>http://jordanlewis.org/categories/meta/</link>
+      <pubDate>Mon, 02 Jan 2012 01:50:00 -0400</pubDate>
+      
+      <guid>http://jordanlewis.org/categories/meta/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

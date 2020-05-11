@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html><head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Abstract Generic Collections: PFDS Section 2.1 Redux - Jordan Lewis</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="Abstract Generic Collections: PFDS Section 2.1 Redux" />
+<meta property="og:description" content="At the end of my last post, I mentioned that I ended up reusing Scala&rsquo;s build-in List collection to implement the exercises instead of writing a generic abstract Stack and sample implementations of those. Since then, I&rsquo;ve spent some time learning about how to implement generic collections in Scala. I came up with a Stack trait, a la Okasaki&rsquo;s Stack signature, and three implementations: the first two are straightforward translations of the SML structures given in the book, and the third is a more Scala-idiomatic implementation." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://jordanlewis.org/posts/2012-01-31-abstract-generic-collections-section-2-dot-1-redux/" />
+<meta property="article:published_time" content="2012-01-31T00:34:00-04:00" />
+<meta property="article:modified_time" content="2012-01-31T00:34:00-04:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Abstract Generic Collections: PFDS Section 2.1 Redux"/>
+<meta name="twitter:description" content="At the end of my last post, I mentioned that I ended up reusing Scala&rsquo;s build-in List collection to implement the exercises instead of writing a generic abstract Stack and sample implementations of those. Since then, I&rsquo;ve spent some time learning about how to implement generic collections in Scala. I came up with a Stack trait, a la Okasaki&rsquo;s Stack signature, and three implementations: the first two are straightforward translations of the SML structures given in the book, and the third is a more Scala-idiomatic implementation."/>
+<script src="http://jordanlewis.org/js/feather.min.js"></script>
+	
+	<link href="https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" media="screen" href="http://jordanlewis.org/css/main.css" />
+</head><body>
+        <div class="content"><header>
+	<div class="main">
+		<a href="http://jordanlewis.org/">Jordan Lewis</a>
+	</div>
+	<nav>
+		
+		<a href="/">Home</a>
+		
+		<a href="/posts">Posts</a>
+		
+	</nav>
+</header>
+
+<main>
+	<article>
+		<div class="title">
+			<h1 class="title">Abstract Generic Collections: PFDS Section 2.1 Redux</h1>
+			<div class="meta">Posted on Jan 31, 2012</div>
+		</div>
+		
+
+		<section class="body"><div>
+      <p>At the end of my last post, I mentioned that I ended up reusing Scala&rsquo;s build-in
+List collection to implement the exercises instead of writing a generic abstract
+Stack and sample implementations of those. Since then, I&rsquo;ve spent some time
+learning about how to implement generic collections in Scala. I came up with
+a Stack trait, <em>a la</em> Okasaki&rsquo;s Stack signature, and three implementations: the
+first two are straightforward translations of the SML structures given in the
+book, and the third is a more Scala-idiomatic implementation.</p>
+<p>On an organizational note, I&rsquo;ve also started a
+<a href="https://github.com/jordanlewis/PFDScala">PFDScala repository</a> on GitHub for
+this blog series, so I can have a centralized place to put all of the code I
+write for the exercises and examples. I&rsquo;ll still put the relevant snippets in
+gists so I can embed them here.</p>
+<h2 id="a-generic-trait-for-stacks">A Generic Trait for Stacks <a href="#a-generic-trait-for-stacks" class="hanchor" ariaLabel="Anchor"><i data-feather="link-2"></i></a> </h2>
+<p>Scala traits are very powerful. They&rsquo;re basically like mixin classes from Ruby,
+in that your class can extend from multiple traits without having the troubles
+that plague C++-style multiple inheritance.</p>
+<p>Abstract traits can be used like Java interfaces. This is just what we need to
+write a generic interface for Stacks:</p>
+<script type="application/javascript" src="https://gist.github.com/jordanlewis/1709179.js"></script>
+
+<p>For those of you unfamiliar with Scala, this is similar to a Java interface or
+a SML signature: we&rsquo;re defining a type-parameterized trait/interface/signature
+with a bunch of method signatures that classes which extend this trait must
+implement themselves. What&rsquo;s up with the weird type annotations, though?</p>
+<p>In Scala, annotating a type parameter with <code>+</code> marks it as a covariant type
+parameter. This means that if we have a type <code>C[+T]</code>, a type with a single
+covariant type parameter, and if type <code>A</code> is a subtype of type <code>B</code>, then type
+<code>C[A]</code> is a subtype of <code>C[B]</code>. We can similarly annotate a type parameter with
+<code>-</code> for the opposite effect.</p>
+<p>The <code>&gt;:</code> type operator is the supertype relationship: the type on the left of
+it has to be a supertype of the type on the right of it.</p>
+<p>So why do we need to annotate our types like this here? In Scala, by default,
+types are invariant in their type parameters. This means if we had a
+<code>List[Integer]</code>, and <code>List</code>'s type parameter was invariant, then that list
+would not be a subtype of a <code>List[Number]</code>, even though it seems like it would
+be fine because a <code>List</code> of <code>Integers</code> is just a specialized <code>List</code> of
+<code>Numbers</code>. The same thing goes for our <code>Stack</code> type, so we mark its type
+parameter up as covariant.</p>
+<p>However, to keep compile-time type checking sound, Scala has to impose some
+restrictions on the types of methods in classes with covariant type parameters,
+due to the problem of mutability: a mutable array of type <code>T</code> is actually
+<em>contravariant</em> in its type parameter, because if you had an <code>Array</code> of type
+<code>Any</code>, updating one of its cells to be a subtype of <code>Any</code> like <code>String</code> is not
+always legal. So, in our <code>Stack</code> example, we can no longer simply say</p>
+<pre><code>def cons(x: T) : Stack[T]
+</code></pre><p>because the <code>x</code> is appearing in a <em>contravariant</em> position, meaning that it has
+the potential to mutate state in a way that could break type safety.</p>
+<p>Luckily, we can get around this problem of contraviariant position by imposing
+a bound on the type of cons&rsquo;s parameter: we say</p>
+<pre><code>def cons(x: U &gt;: T) : Stack[U]
+</code></pre><p>to ensure that the input type of cons is a supertype of the stack&rsquo;s type. This
+prevents any type safety issues caused by the potential contravariance of the
+formal parameter, and allows users to generalize the type of a <code>Stack</code> by consing
+a more general type onto it. For example, one could cons a String onto a
+<code>Stack</code>[Int] and get out a <code>Stack</code>[Any].</p>
+<h2 id="implementation-1-using-builtin-lists-as-the-backing-store">Implementation 1: Using builtin Lists as the backing store <a href="#implementation-1-using-builtin-lists-as-the-backing-store" class="hanchor" ariaLabel="Anchor"><i data-feather="link-2"></i></a> </h2>
+<p>This class uses the builtin List implementation to provide the underlying
+storage for the <code>Stack</code>. It also uses Scala&rsquo;s <em>companion object</em> feature to
+provide a static factory method for creating new <code>ListStack</code>s.</p>
+<script type="application/javascript" src="https://gist.github.com/jordanlewis/1709271.js"></script>
+
+<h2 id="implementation-2-using-a-custom-list-case-class-as-the-backing-store">Implementation 2: Using a custom List case class as the backing store <a href="#implementation-2-using-a-custom-list-case-class-as-the-backing-store" class="hanchor" ariaLabel="Anchor"><i data-feather="link-2"></i></a> </h2>
+<p>This class uses a custom implementation of <code>List</code> as the backing store. It&rsquo;s
+the same idea as the first one, except we use a set of case classes to match on
+instead of just wrapping <code>List</code>'s functions.</p>
+<script type="application/javascript" src="https://gist.github.com/jordanlewis/1709288.js"></script>
+
+<p>This shows off Scala&rsquo;s case classes a little bit: they&rsquo;re just like datatypes
+in SML, except a bit more verbose to specify. The abstract class <code>LIST</code> is like
+the name of the datatype, and the case classes that inherit from it are like
+the datatype&rsquo;s constructors. Making <code>LIST</code> <em>sealed</em> restricts classes from
+extending it unless they&rsquo;re in the same file: this allows the compiler to detect
+non-exhaustive matches.</p>
+<h2 id="implementation-3-implementing-the-stack-functions-within-case-classes">Implementation 3: Implementing the <code>Stack</code> functions within case classes <a href="#implementation-3-implementing-the-stack-functions-within-case-classes" class="hanchor" ariaLabel="Anchor"><i data-feather="link-2"></i></a> </h2>
+<p>This implementation is a bit different from the other two: instead of storing
+the actual <code>Stack</code> data as a data member inside of a single <code>StackImpl</code> class,
+this puts the implementation inside of case classes that extend the
+implementation class, which is made abstract.</p>
+<p>This strategy seems the most idiomatic of the implementations I wrote. It
+defines its own internal datatype like the custom <code>List</code> implementation,
+without the mess of having to match on each of the cases of the custom <code>List</code>
+every time it&rsquo;s necessary to operate on the data. I think it produces the most
+compact and readable code out of all three implementations.</p>
+<script type="application/javascript" src="https://gist.github.com/jordanlewis/1709315.js"></script>
+
+<h2 id="conclusion">Conclusion <a href="#conclusion" class="hanchor" ariaLabel="Anchor"><i data-feather="link-2"></i></a> </h2>
+<p>That was a long-winded post for what was just defining a simple custom
+collection interface and a few simple implementations. Again, all of this code is available in the
+<a href="https://github.com/jordanlewis/PFDScala">PFDScala GitHub repo</a>. Next time
+we&rsquo;ll proceed with the next section, 2.2. Hopefully it will be easier to
+implement the examples and exercise solutions with the improved understanding
+of Scala&rsquo;s type system that I gathered by writing this post.</p>
+
+    </div></section>
+
+		<div class="post-tags">
+			
+			
+			
+		</div>
+	</article>
+</main>
+<footer>
+<hr><a class="soc" href="https://twitter.com/JordanALewis" title="Twitter"><i data-feather="twitter"></i></a>|<a class="soc" href="https://twitch.tv/large__data__bank" title="Twitch"><i data-feather="twitch"></i></a>|<a class="soc" href="https://github.com/jordanlewis" title="GitHub"><i data-feather="github"></i></a>|<a class="soc" href="https://youtube.com/jordanthelewis" title="YouTube"><i data-feather="youtube"></i></a>|<a class="soc" href="https://instagram.com/jordanthelewis" title="Instagram"><i data-feather="instagram"></i></a><br>
+<br>
+Generated 2020-05-11 | Based on <a href="https://github.com/athul/archie">Archie Theme</a> 
+</footer>
+
+
+<script>
+      feather.replace()
+</script>
+
+</div>
+    </body>
+</html>

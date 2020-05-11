@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html><head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"><title>Exercises from PFDS Section 2.2 - Jordan Lewis</title><meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta property="og:title" content="Exercises from PFDS Section 2.2" />
+<meta property="og:description" content="Section 2.2&rsquo;s exercises define some optimizations to the section&rsquo;s unbalanced tree set implementation.
+Exercise 2.2 The implementation of member that Okasaki gives for binary search trees in section 2.2 performs 2d comparisons for a tree of depth d in the worst case, when searching for a number that is the farthest to the right on the tree, and when the right path in the tree is of depth d itself. This is because every call of member checks whether x &lt; y and, if not, whether y &lt; x." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://jordanlewis.org/posts/2012-12-04-pfds-section-2-dot-2-exercises/" />
+<meta property="article:published_time" content="2012-12-04T18:48:00-04:00" />
+<meta property="article:modified_time" content="2012-12-04T18:48:00-04:00" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Exercises from PFDS Section 2.2"/>
+<meta name="twitter:description" content="Section 2.2&rsquo;s exercises define some optimizations to the section&rsquo;s unbalanced tree set implementation.
+Exercise 2.2 The implementation of member that Okasaki gives for binary search trees in section 2.2 performs 2d comparisons for a tree of depth d in the worst case, when searching for a number that is the farthest to the right on the tree, and when the right path in the tree is of depth d itself. This is because every call of member checks whether x &lt; y and, if not, whether y &lt; x."/>
+<script src="http://jordanlewis.org/js/feather.min.js"></script>
+	
+	<link href="https://fonts.googleapis.com/css2?family=Fira+Sans&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Roboto+Mono" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" media="screen" href="http://jordanlewis.org/css/main.css" />
+</head><body>
+        <div class="content"><header>
+	<div class="main">
+		<a href="http://jordanlewis.org/">Jordan Lewis</a>
+	</div>
+	<nav>
+		
+		<a href="/">Home</a>
+		
+		<a href="/posts">Posts</a>
+		
+	</nav>
+</header>
+
+<main>
+	<article>
+		<div class="title">
+			<h1 class="title">Exercises from PFDS Section 2.2</h1>
+			<div class="meta">Posted on Dec 4, 2012</div>
+		</div>
+		
+
+		<section class="body"><div>
+      <p>Section 2.2&rsquo;s exercises define some optimizations to the section&rsquo;s unbalanced
+tree set implementation.</p>
+<h2 id="exercise-22">Exercise 2.2 <a href="#exercise-22" class="hanchor" ariaLabel="Anchor"><i data-feather="link-2"></i></a> </h2>
+<p>The implementation of <code>member</code> that Okasaki gives for binary search trees in
+section 2.2 performs <code>2d</code> comparisons for a tree of depth <code>d</code> in the worst
+case, when searching for a number that is the farthest to the right on the
+tree, and when the right path in the tree is of depth <code>d</code> itself. This is
+because every call of <code>member</code> checks whether <code>x &lt; y</code> and, if not, whether <code>y &lt; x</code>. This strategy allows immediate detection of the case in which the value
+being searched for is contained in the current node, permitting short-circuit
+cases like where the searched-for value is in the root node, at the cost of
+requiring double the comparisons when traversing rightward.</p>
+<p>Exercise 2.2 proposes a strategy in which the second comparison is delayed
+until the bottom of the tree. This removes the <code>2d</code> worst-case number of
+comparisons, at the cost of raising the minimum number of comparisons to the
+number of nodes in the shortest path from the root to a leaf. The implementation
+is relatively straightforward:</p>
+<script type="application/javascript" src="https://gist.github.com/jordanlewis/4206836.js"></script>
+
+<p>We introduce a new parameter to <code>member</code>, <code>c: Option[T]</code>, which is <code>None</code> when
+there is not yet a candidate for equality, and <code>Some(d)</code> when <code>d</code> is a candidate
+for equality. Then, when we reach a leaf node, we check to see whether our
+candidate is equal to the value we&rsquo;re searching for.</p>
+<h2 id="exercise-23">Exercise 2.3 <a href="#exercise-23" class="hanchor" ariaLabel="Anchor"><i data-feather="link-2"></i></a> </h2>
+<p>Exercise 2.3 proposes an optimization to <code>insert</code>. The implementation given by
+Okasaki performs wasteful path copying when the value being inserted is already
+in the tree. If the value being inserted is present in a particular node, the
+only thing that&rsquo;s done is to short-circuit the operation and return the node
+as it exists, which doesn&rsquo;t reverse any of the path copying performed while
+traversing the tree down to the node.</p>
+<p>Throwing an exception in the case where the element being inserted already
+exists avoids the wasteful path copying. Okasaki requires that the function
+establish only one exception handler per insert, not per function call, so we
+catch the exception in the helper <code>insert</code> method of the UnbalancedTreeSet
+class.</p>
+<script type="application/javascript" src="https://gist.github.com/jordanlewis/4206895.js"></script>
+
+<h2 id="exercise-24">Exercise 2.4 <a href="#exercise-24" class="hanchor" ariaLabel="Anchor"><i data-feather="link-2"></i></a> </h2>
+<p>Exercise 2.4 is to integrate the improvements to <code>member</code> from exercise 2.2
+into the improved version of <code>insert</code> from 2.3. This is straightforward: we
+follow the pattern established by 2.2, threading an equality candidate through
+the recursive calls, and checking for equality only at the end. Now <code>insert</code>
+performs no unnecessary path copying if inserting a pre-existing element, and
+performs at most <code>d + 1</code> comparisons along the way.</p>
+<script type="application/javascript" src="https://gist.github.com/jordanlewis/4207683.js"></script>
+
+<h2 id="exercise-25">Exercise 2.5 <a href="#exercise-25" class="hanchor" ariaLabel="Anchor"><i data-feather="link-2"></i></a> </h2>
+<p>Exercise 2.5 is about generating balanced binary trees that share as much as
+possible. The exercise assumes that all of the values in the trees are the same,
+which doesn&rsquo;t make much sense for the set abstraction, but ensures that all
+subtrees of the same size are identical.</p>
+<p>For the first part, we implement a function <code>complete</code> that creates a complete
+tree of <code>d</code> levels. As a binary tree, it should have <code>2^d - 1</code> values inside.
+The implementation is a straightforward recursive function. The base case, a
+binary tree of 0 levels, is just a leaf node. The recursive case creates an
+internal node whose children are both the result of recursing with one less
+level.</p>
+<p>For the second part, we implement a function <code>balanced</code> that creates a tree
+with <code>d</code> values that is as balanced as possible: every internal node&rsquo;s subtrees
+differ in size by at most 1.</p>
+<p>I put both of these methods directly on BinaryTree&rsquo;s companion object. I think
+this is idiomatic, but it&rsquo;s not really clear to me: there are so many different
+ways to do things in Scala.</p>
+<script type="application/javascript" src="https://gist.github.com/jordanlewis/4210143.js"></script>
+
+<p>I wrote a few tests for the tree generation functions in a normal
+assertion-based style before remembering the existence of
+<a href="https://github.com/rickynils/scalacheck">ScalaCheck</a> and its obvious
+applicability for this kind of thing. I&rsquo;ve been itching to use a
+QuickCheck-style testing framework for a while. If you haven&rsquo;t seen it before,
+you should definitely check it out. It allows you to write tests in a
+declarative style, without specifying individual test cases. The framework
+will generate random test cases for you, either by using built-in random
+generators for simple cases like arbitrary strings or integers, or by using
+a user-defined random object generator.</p>
+<p>In this case, since I wanted my test cases to vary the number of levels or
+nodes in a balanced tree, I was able to just use the built-in random integer
+generator. Writing tests in this way is concise and fun. Here&rsquo;s what they ended
+up looking like:</p>
+<script type="application/javascript" src="https://gist.github.com/jordanlewis/4210365.js"></script>
+
+<h2 id="exercise-26">Exercise 2.6 <a href="#exercise-26" class="hanchor" ariaLabel="Anchor"><i data-feather="link-2"></i></a> </h2>
+<p>This exercise asks the reader to modify UnbalancedTreeSet so that it represents
+a map instead of a set. This is very straightforward, if tedious: we must add
+another data member to <code>BinaryTreeNode</code> that represents the value of an entry
+in the map, change <code>member</code> to <code>lookup</code> and have it return the value data
+member instead of true, and throw an exception instead of false, and finally
+change <code>insert</code> to <code>bind</code>, give it an extra value argument, and set the
+<code>BinaryTreeNode</code>'s value field to that argument. I didn&rsquo;t implement this.</p>
+<p>As usual, the new code&rsquo;s on <a href="https://github.com/jordanlewis/PFDScala">GitHub</a>.</p>
+
+    </div></section>
+
+		<div class="post-tags">
+			
+			
+			
+		</div>
+	</article>
+</main>
+<footer>
+<hr><a class="soc" href="https://twitter.com/JordanALewis" title="Twitter"><i data-feather="twitter"></i></a>|<a class="soc" href="https://twitch.tv/large__data__bank" title="Twitch"><i data-feather="twitch"></i></a>|<a class="soc" href="https://github.com/jordanlewis" title="GitHub"><i data-feather="github"></i></a>|<a class="soc" href="https://youtube.com/jordanthelewis" title="YouTube"><i data-feather="youtube"></i></a>|<a class="soc" href="https://instagram.com/jordanthelewis" title="Instagram"><i data-feather="instagram"></i></a><br>
+<br>
+Generated 2020-05-11 | Based on <a href="https://github.com/athul/archie">Archie Theme</a> 
+</footer>
+
+
+<script>
+      feather.replace()
+</script>
+
+</div>
+    </body>
+</html>
